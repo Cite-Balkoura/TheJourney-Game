@@ -1,0 +1,13 @@
+game:
+
+#
+
+data:
+  mongo:
+    databases: ["master", "event_journey"]
+    host: "127.0.0.1"
+    port: 27017
+    user: "minecraft"
+    password: "admin"
+    db: "admin"
+#

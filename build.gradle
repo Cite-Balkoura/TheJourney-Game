@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+
+jar {
+    actions = [] as List<Action<? super Task>>
+    dependsOn('shadowJar')
+}
+
+shadowJar{
+    getArchiveClassifier().set(null)
+}
+
+repositories {
+    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url = 'https://jitpack.io' }
+    mavenCentral()
+    mavenLocal()
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+dependencies {
+    implementation group: 'com.github.tutur1004', name: 'MilekatUtils', version: '879026bfd2'
+    compileOnly group: 'io.papermc.paper', name: 'paper-api', version: '1.17.1-R0.1-SNAPSHOT'
+    implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: '4.3.2'
+    implementation group: 'dev.morphia.morphia', name: 'morphia-core', version: '2.2.1'
+}
