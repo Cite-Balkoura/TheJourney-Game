@@ -1,8 +1,9 @@
 game:
-
+  universe: "SKY_LAND"
 #
 
 data:
+  event-name: "The Journey"
   mongo:
     databases: ["master", "event_journey"]
     host: "127.0.0.1"
