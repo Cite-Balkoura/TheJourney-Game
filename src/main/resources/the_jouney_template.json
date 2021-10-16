@@ -1,0 +1,10 @@
+{
+    "_t": "Quest",
+    "universe": "SKY_LAND",
+    "name": "Test Saturation >",
+    "lore": "",
+    "pos": 11,
+    "type": "Saturation",
+    "count": 3,
+    "payload": ">"
+}

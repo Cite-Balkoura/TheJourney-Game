@@ -1,6 +1,17 @@
 package fr.grimtown.journey.quests.classes;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.IndexOptions;
+import dev.morphia.annotations.Indexed;
+import org.bson.types.ObjectId;
+
+@Entity(value = "quest")
 public class Quest {
+    @Id
+    private ObjectId id;
+    private String universe;
+    @Indexed(options = @IndexOptions(unique = true))
     private String name;
     private String lore;
     private int pos;
@@ -12,19 +23,35 @@ public class Quest {
     public Quest() {}
 
     public enum Type {
-        Inventory,
-        Kill,
-        Hit,
-        Death,
-        Level,
-        Travel,
-        Explore,
-        Place,
         Break,
         Craft,
+        Death,
         Eat,
+        Experience,
+        Explore,
         Health,
-        Saturation
+        Hit,
+        Inventory,
+        Kill,
+        Place,
+        Saturation,
+        // TODO: 16/10/2021 to do :
+        Travel,
+        Equip,
+        Tamed,
+        Bread,
+        Smelt,
+        Enchant,
+        Shoot,
+        Brew,
+        Trade,
+        Repair,
+        Spawn,
+        Effect,
+    }
+
+    public ObjectId getId() {
+        return id;
     }
 
     public String getName() {
