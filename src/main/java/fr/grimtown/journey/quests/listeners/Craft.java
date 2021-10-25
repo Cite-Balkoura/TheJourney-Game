@@ -18,7 +18,7 @@ public class Craft implements Listener {
     private final Quest quest;
     private final Material material;// TODO: 16/10/2021 Multiples
     public Craft(Quest quest) {
-        this.quest = quest;
+        this.quest = quest;// TODO: 25/10/2021 Recipe namespace(s) ??
         material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
         if (material!=null) QuestsUtils.questLoadLog(quest.getName(), material.toString());
         else HandlerList.unregisterAll(this);

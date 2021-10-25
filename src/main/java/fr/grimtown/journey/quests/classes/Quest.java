@@ -23,16 +23,16 @@ public class Quest {
     public Quest() {}
 
     public enum Type {
-        Break,
-        Craft,
+        Break,// TODO: 25/10/2021 Multiples/Any ?
+        Craft,// TODO: 25/10/2021 Multiples/Any ? // TODO: 25/10/2021 Recipe name space ?
         Death,
         Eat,
         Experience,
-        Explore,
+        Explore,// TODO: 25/10/2021 Any
         Health,
         Hit,
-        Inventory,
-        Kill,
+        Inventory,// TODO: 25/10/2021 Multiples/Any
+        Kill,// TODO: 25/10/2021 Multiples/Any
         Place,
         Saturation,
         Travel,
@@ -40,15 +40,16 @@ public class Quest {
         Equip,
         Tamed,
         Breed,
-
         Smelt,
-
+        // TODO: 25/10/2021 la suite :)
         Enchant,
         Shoot,
         Brew,
         Trade,
         Repair,
+        Sleep,
         Spawn,
+        MobDamage,// TODO: 25/10/2021 Goat Llama ?
         Effect,
     }
 
