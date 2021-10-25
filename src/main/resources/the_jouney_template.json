@@ -1,10 +1,10 @@
 {
     "_t": "Quest",
     "universe": "SKY_LAND",
-    "name": "Test Saturation >",
+    "name": "Test Smelt",
     "lore": "",
-    "pos": 11,
-    "type": "Saturation",
-    "count": 3,
-    "payload": ">"
+    "pos": 50,
+    "type": "Smelt",
+    "count": 2,
+    "payload": "COOKED_PORKCHOP"
 }

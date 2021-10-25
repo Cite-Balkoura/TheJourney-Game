@@ -24,7 +24,7 @@ public class Place implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerBlockPlace(BlockPlaceEvent event) {
         if (material!=null && !event.getBlock().getType().equals(material)) return;
         if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;

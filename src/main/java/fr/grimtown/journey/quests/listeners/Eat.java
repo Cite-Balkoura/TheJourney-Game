@@ -21,7 +21,7 @@ public class Eat implements Listener {
         else HandlerList.unregisterAll(this);
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerDeath(FoodLevelChangeEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         if (event.getItem()==null || !event.getItem().getType().equals(material)) return;

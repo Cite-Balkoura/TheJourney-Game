@@ -35,12 +35,14 @@ public class Quest {
         Kill,
         Place,
         Saturation,
-        // TODO: 16/10/2021 to do :
         Travel,
+        Liquid,
         Equip,
         Tamed,
-        Bread,
+        Breed,
+
         Smelt,
+
         Enchant,
         Shoot,
         Brew,

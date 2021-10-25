@@ -7,27 +7,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityBreedEvent;
 
-import java.util.Locale;
-
-public class Hit implements Listener {
+public class Breed implements Listener {
     private final Quest quest;
-    private EntityType type;
-    public Hit(Quest quest) {
+    private EntityType entity;
+
+    public Breed(Quest quest) {
         this.quest = quest;
         try {
-            type = EntityType.valueOf(quest.getPayload().toUpperCase(Locale.ROOT));
-            QuestsUtils.questLoadLog(quest.getName(), type.toString());
-        } catch (IllegalArgumentException ignore) {
+            entity = EntityType.valueOf(quest.getPayload());
+            QuestsUtils.questLoadLog(quest.getName(), quest.getPayload());
+        } catch (IllegalArgumentException exception) {
+            exception.printStackTrace();
             HandlerList.unregisterAll(this);
         }
     }
 
     @EventHandler (ignoreCancelled = true)
-    public void onMonsterDamage(EntityDamageByEntityEvent event) {
-        if (!event.getEntity().getType().equals(type)) return;
-        if (!(event.getDamager() instanceof Player player)) return;
+    public void onPlayerBreed(EntityBreedEvent event) {
+        if (!(event.getBreeder() instanceof Player player)) return;
+        if (!(event.getFather().getType().equals(entity) && event.getMother().getType().equals(entity))) return;
         if (QuestsUtils.hasCompleted(player.getUniqueId(), quest)) return;
         QuestsUtils.getProgression(player.getUniqueId(), quest).addProgress();
     }

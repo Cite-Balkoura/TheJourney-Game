@@ -23,7 +23,7 @@ public class Death implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (event.getEntity().getLastDamageCause()==null) return;
         if (!event.getEntity().getLastDamageCause().getCause().equals(damageCause)) return;

@@ -24,7 +24,7 @@ public class Break implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerBlockBreak(BlockBreakEvent event) {
         if (material!=null && !event.getBlock().getType().equals(material)) return;
         if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;

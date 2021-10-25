@@ -27,7 +27,7 @@ public class Explore implements Listener {
         else HandlerList.unregisterAll(this);
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onStructureExplore(PlayerMoveEvent event) {
         if (questStructure==null) return;
         if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
@@ -37,7 +37,7 @@ public class Explore implements Listener {
         QuestsUtils.getProgression(event.getPlayer().getUniqueId(), quest).setCompleted();
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onWorldExplore(PlayerMoveEvent event) {
         if (questWorld==null) return;
         if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;

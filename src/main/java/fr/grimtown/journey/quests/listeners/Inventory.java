@@ -26,11 +26,10 @@ public class Inventory implements Listener {
         else HandlerList.unregisterAll(this);
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerLoot(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
-        if (!event.getItem().getItemStack().getType().equals(material))
-            return;
+        if (!event.getItem().getItemStack().getType().equals(material)) return;
         if (QuestsUtils.hasCompleted(event.getEntity().getUniqueId(), quest)) return;
         ItemStack item = itemProcess(event.getItem().getItemStack(),
                 QuestsUtils.getProgression(event.getEntity().getUniqueId(), quest));
@@ -38,12 +37,12 @@ public class Inventory implements Listener {
         else event.getItem().setItemStack(item);
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerClickInv(InventoryClickEvent event) {
         if (event.getWhoClicked() instanceof Player) inventoryCheck((Player) event.getWhoClicked());
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onCloseInventory(InventoryCloseEvent event) {
         if (event.getPlayer() instanceof Player) inventoryCheck((Player) event.getPlayer());
     }

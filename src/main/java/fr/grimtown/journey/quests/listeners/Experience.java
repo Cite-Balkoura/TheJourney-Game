@@ -10,10 +10,10 @@ public class Experience implements Listener {
     private final Quest quest;
     public Experience(Quest quest) {
         this.quest = quest;
-        QuestsUtils.questLoadLog(quest.getName(), quest.getCount() + "levels");
+        QuestsUtils.questLoadLog(quest.getName(), "levels=" + quest.getCount());
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerExpChange(PlayerExpChangeEvent event) {
         if (event.getPlayer().getLevel() < quest.getCount()) return;
         if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;

@@ -24,7 +24,7 @@ public class Kill implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerMobKill(EntityDeathEvent event) {
         if (event.getEntity() instanceof Player) return;
         if (!event.getEntity().getType().equals(type)) return;

@@ -14,7 +14,7 @@ public class Saturation implements Listener {
         QuestsUtils.questLoadLog(quest.getName(), quest.getPayload() + " than " +  quest.getCount());
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerDeath(FoodLevelChangeEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         if (!(quest.getPayload().equalsIgnoreCase(">") && event.getFoodLevel() > quest.getCount()) &&

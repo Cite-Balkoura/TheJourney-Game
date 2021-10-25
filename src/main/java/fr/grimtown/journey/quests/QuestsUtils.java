@@ -18,7 +18,7 @@ public class QuestsUtils {
         if (!QuestsManager.playerProgression.containsKey(uuid))
             QuestsManager.playerProgression.put(uuid, ProgressionManager.getProgressions(uuid));
         Optional<Progression> optionalProgression = QuestsManager.playerProgression.get(uuid).stream()
-                .filter(progression -> progression.getQuest().getName().equalsIgnoreCase(quest.getName())).findFirst();
+                .filter(progression -> progression.getQuest().getId().equals(quest.getId())).findFirst();
         return optionalProgression.map(Progression::isCompleted).orElse(false);
     }
 
@@ -29,7 +29,7 @@ public class QuestsUtils {
         if (!QuestsManager.playerProgression.containsKey(uuid))
             QuestsManager.playerProgression.put(uuid, ProgressionManager.getProgressions(uuid));
         Optional<Progression> optionalProgression = QuestsManager.playerProgression.get(uuid).stream()
-                .filter(progression -> progression.getQuest().equals(quest)).findFirst();
+                .filter(progression -> progression.getQuest().getId().equals(quest.getId())).findFirst();
         return optionalProgression.orElseGet(() -> new Progression(uuid, quest));
     }
 
