@@ -1,10 +1,10 @@
 {
     "_t": "Quest",
     "universe": "SKY_LAND",
-    "name": "Test Smelt",
+    "name": "Test Beacon BEACON",
     "lore": "",
     "pos": 50,
-    "type": "Smelt",
+    "type": "Beacon",
     "count": 2,
-    "payload": "COOKED_PORKCHOP"
+    "payload": "BEACON"
 }

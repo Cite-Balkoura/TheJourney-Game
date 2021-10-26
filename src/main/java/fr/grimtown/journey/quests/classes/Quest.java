@@ -41,16 +41,17 @@ public class Quest {
         Tamed,
         Breed,
         Smelt,
-        // TODO: 25/10/2021 la suite :)
         Enchant,
         Shoot,
         Brew,
         Trade,
         Repair,
         Sleep,
-        Spawn,
-        MobDamage,// TODO: 25/10/2021 Goat Llama ?
+        Invoke,
         Effect,
+        Beacon,
+
+        MobDamage,// TODO: 25/10/2021 Goat Llama ?
     }
 
     public ObjectId getId() {
