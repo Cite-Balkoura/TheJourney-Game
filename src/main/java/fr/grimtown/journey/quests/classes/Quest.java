@@ -23,17 +23,17 @@ public class Quest {
     public Quest() {}
 
     public enum Type {
-        Break,// TODO: 25/10/2021 Multiples/Any ?
-        Craft,// TODO: 25/10/2021 Multiples/Any ? // TODO: 25/10/2021 Recipe name space ?
+        Break,
+        Craft,
         Death,
-        Eat,
+        Eat,// TODO: 28/10/2021 Test !
         Experience,
-        Explore,// TODO: 25/10/2021 Any
+        Explore,
         Health,
         Hit,
-        Inventory,// TODO: 25/10/2021 Multiples/Any
-        Kill,// TODO: 25/10/2021 Multiples/Any
-        Place,
+        Inventory,
+        Kill,
+        Place,// TODO: 28/10/2021 Check seeds
         Saturation,
         Travel,
         Liquid,
@@ -50,8 +50,11 @@ public class Quest {
         Invoke,
         Effect,
         Beacon,
+        MobDamage,
+        StandOn,
+        Upgrade,// TODO: 16/10/2021 Multiples
 
-        MobDamage,// TODO: 25/10/2021 Goat Llama ?
+        Growth
     }
 
     public ObjectId getId() {

@@ -14,10 +14,10 @@ import java.util.Arrays;
 
 public class Equip implements Listener {
     private final Quest quest;
-    private Material helmet = null;
-    private Material chest = null;
-    private Material leggings = null;
-    private Material boots = null;
+    private Material helmet = Material.BARRIER;
+    private Material chest = Material.BARRIER;
+    private Material leggings = Material.BARRIER;
+    private Material boots = Material.BARRIER;
 
     public Equip(Quest quest) {
         this.quest = quest;
@@ -34,13 +34,17 @@ public class Equip implements Listener {
     public void onPlayerEquip(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
         if (QuestsUtils.hasCompleted(player.getUniqueId(), quest)) return;
-        if (helmet!=null && !(player.getEquipment().getHelmet()!=null &&
+        if (helmet==null && player.getEquipment().getHelmet()==null) return;
+        else if (helmet!=null && !(player.getEquipment().getHelmet()!=null &&
                 player.getEquipment().getHelmet().getType().equals(helmet))) return;
-        if (chest!=null && !(player.getEquipment().getChestplate()!=null &&
+        if (chest==null && player.getEquipment().getChestplate()==null) return;
+        else if (chest!=null && !(player.getEquipment().getChestplate()!=null &&
                 player.getEquipment().getChestplate().getType().equals(chest))) return;
-        if (leggings!=null && !(player.getEquipment().getLeggings()!=null &&
+        if (leggings==null && player.getEquipment().getLeggings()==null) return;
+        else if (leggings!=null && !(player.getEquipment().getLeggings()!=null &&
                 player.getEquipment().getLeggings().getType().equals(leggings))) return;
-        if (boots!=null && !(player.getEquipment().getBoots()!=null &&
+        if (boots==null && player.getEquipment().getBoots()==null) return;
+        else if (boots!=null && !(player.getEquipment().getBoots()!=null &&
                 player.getEquipment().getBoots().getType().equals(boots))) return;
         QuestsUtils.getProgression(player.getUniqueId(), quest).setCompleted();
     }

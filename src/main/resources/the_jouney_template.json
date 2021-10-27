@@ -1,10 +1,10 @@
 {
     "_t": "Quest",
     "universe": "SKY_LAND",
-    "name": "Test Beacon BEACON",
+    "name": "Test Explore STRONGHOLD",
     "lore": "",
     "pos": 50,
-    "type": "Beacon",
+    "type": "Explore",
     "count": 2,
-    "payload": "BEACON"
+    "payload": "STRONGHOLD"
 }

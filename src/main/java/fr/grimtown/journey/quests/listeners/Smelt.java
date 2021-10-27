@@ -21,6 +21,7 @@ public class Smelt implements Listener {
         this.quest = quest;
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             material = null;
+            QuestsUtils.questLoadLog(quest.getName(), "ANY");
         } else {
             material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
             if (material != null) QuestsUtils.questLoadLog(quest.getName(), material.toString());
