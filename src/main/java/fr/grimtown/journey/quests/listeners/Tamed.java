@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ public class Tamed implements Listener {
 
     public Tamed(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         try {
             entity = EntityType.valueOf(quest.getPayload());
             QuestsUtils.questLoadLog(quest.getName(), quest.getPayload());
@@ -30,7 +32,7 @@ public class Tamed implements Listener {
     public void onPlayerTame(EntityTameEvent event) {
         if (!(event.getOwner() instanceof Player player)) return;
         if (!event.getEntity().getType().equals(entity)) return;
-        if (QuestsUtils.hasCompleted(player.getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(player.getUniqueId(), quest).addProgress();
+        if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
+        GameUtils.getProgression(player.getUniqueId(), quest).addProgress();
     }
 }

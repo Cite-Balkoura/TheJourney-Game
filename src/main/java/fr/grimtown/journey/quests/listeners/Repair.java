@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ public class Repair implements Listener {
 
     public Repair(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
         } else {
@@ -46,7 +48,7 @@ public class Repair implements Listener {
         Damageable baseDmg = (Damageable) baseItem.getItemMeta();
         Damageable repairedDmg = (Damageable) event.getCurrentItem().getItemMeta();
         if (repairedDmg.getDamage() >= baseDmg.getDamage()) return;
-        if (QuestsUtils.hasCompleted(player.getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(player.getUniqueId(), quest).addProgress();
+        if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
+        GameUtils.getProgression(player.getUniqueId(), quest).addProgress();
     }
 }

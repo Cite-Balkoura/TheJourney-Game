@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ public class StandOn implements Listener {
 
     public StandOn(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         if (quest.getPayload().contains(",")) {
             Arrays.stream(quest.getPayload().split(",")).toList()
                     .forEach(materialType -> {
@@ -52,7 +54,7 @@ public class StandOn implements Listener {
             loc.setY(loc.getY()-(index+1));
             if (!loc.getBlock().getType().equals(blocks.get(index))) return;
         }
-        if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
+        if (GameUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
+        GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
     }
 }

@@ -1,15 +1,40 @@
 package fr.grimtown.journey.game;
 
+import fr.grimtown.journey.game.classes.Progression;
+import fr.grimtown.journey.game.commands.OpenGui;
+import fr.grimtown.journey.game.listeners.GameProgress;
 import fr.grimtown.journey.game.listeners.ProgressionLoader;
 import fr.grimtown.journey.game.listeners.RemoveJoinMsg;
+import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+
 public class GameManager {
+    private final ArrayList<Quest> loadedQuests = new ArrayList<>();
+    private final HashMap<UUID, ArrayList<Progression>> playerProgression = new HashMap<>();
+
     public GameManager(JavaPlugin plugin) {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new RemoveJoinMsg(), plugin);
-        pm.registerEvents(new ProgressionLoader(), plugin);
+        pm.registerEvents(new ProgressionLoader(this), plugin);
+        pm.registerEvents(new GameProgress(this), plugin);
+        plugin.getCommand("journey").setExecutor(new OpenGui());
+    }
+
+    public ArrayList<Quest> getLoadedQuests() {
+        return loadedQuests;
+    }
+
+    public void addQuest(Quest quest) {
+        loadedQuests.add(quest);
+    }
+
+    public HashMap<UUID, ArrayList<Progression>> getPlayerProgression() {
+        return playerProgression;
     }
 }

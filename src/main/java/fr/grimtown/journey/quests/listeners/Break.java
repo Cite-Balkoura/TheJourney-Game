@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ public class Break implements Listener {
 
     public Break(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
         } else {
@@ -32,7 +34,7 @@ public class Break implements Listener {
     @EventHandler (ignoreCancelled = true)
     public void onPlayerBlockBreak(BlockBreakEvent event) {
         if (material!=null && !event.getBlock().getType().equals(material)) return;
-        if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
+        if (GameUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
+        GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
     }
 }

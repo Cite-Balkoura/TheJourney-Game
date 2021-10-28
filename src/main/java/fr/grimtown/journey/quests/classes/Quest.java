@@ -1,10 +1,8 @@
 package fr.grimtown.journey.quests.classes;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.IndexOptions;
-import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.*;
 import org.bson.types.ObjectId;
+import org.bukkit.event.Listener;
 
 @Entity(value = "quest")
 public class Quest {
@@ -14,45 +12,47 @@ public class Quest {
     @Indexed(options = @IndexOptions(unique = true))
     private String name;
     private String lore;
-    private int pos;
+    private int slot;
     private Type type;
     private int count;
     private String payload;
     private boolean bonus;
+    @Transient
+    private Listener listeners;
 
     public Quest() {}
 
     public enum Type {
+        Beacon,
         Break,
+        Breed,
+        Brew,
         Craft,
         Death,
-        Eat,// TODO: 28/10/2021 Test !
+        Eat,
+        Effect,
+        Enchant,
+        Equip,
         Experience,
         Explore,
+        Growth,
         Hit,
         Inventory,
-        Kill,
-        Place,// TODO: 28/10/2021 Check seeds
-        Saturation,
-        Travel,
-        Liquid,
-        Equip,
-        Tamed,
-        Breed,
-        Smelt,
-        Enchant,
-        Shoot,
-        Brew,
-        Trade,
-        Repair,
-        Sleep,
         Invoke,
-        Effect,
-        Beacon,
+        Kill,
+        Liquid,
         MobDamage,
+        Place,
+        Repair,
+        Saturation,
+        Shoot,
+        Sleep,
+        Smelt,
         StandOn,
-        Upgrade,// TODO: 16/10/2021 Multiples
-        Growth
+        Tamed,
+        Trade,
+        Travel,
+        Upgrade
     }
 
     public ObjectId getId() {
@@ -67,8 +67,8 @@ public class Quest {
         return lore;
     }
 
-    public int getPos() {
-        return pos;
+    public int getSlot() {
+        return slot;
     }
 
     public Type getType() {
@@ -85,5 +85,17 @@ public class Quest {
 
     public boolean isBonus() {
         return bonus;
+    }
+
+    public boolean notBonus() {
+        return !bonus;
+    }
+
+    public Listener getListeners() {
+        return listeners;
+    }
+
+    public void setListeners(Listener listeners) {
+        this.listeners = listeners;
     }
 }

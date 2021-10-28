@@ -1,10 +1,10 @@
-package fr.grimtown.journey.quests.managers;
+package fr.grimtown.journey.game.managers;
 
 import dev.morphia.Datastore;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.experimental.updates.UpdateOperators;
 import fr.grimtown.journey.GamePlugin;
-import fr.grimtown.journey.quests.classes.Progression;
+import fr.grimtown.journey.game.classes.Progression;
 import fr.grimtown.journey.quests.classes.Quest;
 
 import java.util.ArrayList;

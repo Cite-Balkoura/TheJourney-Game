@@ -1,11 +1,15 @@
-package fr.grimtown.journey.quests.classes;
+package fr.grimtown.journey.game.classes;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.experimental.MorphiaReference;
-import fr.grimtown.journey.quests.QuestsUtils;
-import fr.grimtown.journey.quests.managers.ProgressionManager;
+import fr.grimtown.journey.GamePlugin;
+import fr.grimtown.journey.game.GameUtils;
+import fr.grimtown.journey.game.events.PlayerQuestComplete;
+import fr.grimtown.journey.game.managers.ProgressionManager;
+import fr.grimtown.journey.quests.classes.Quest;
 import org.bson.types.ObjectId;
+import org.bukkit.Bukkit;
 
 import java.util.Date;
 import java.util.UUID;
@@ -25,15 +29,11 @@ public class Progression {
         this.uuid = uuid;
         this.quest = MorphiaReference.wrap(quest);
         progress = 0;
-        QuestsUtils.playerProgression.get(uuid).add(this);
+        GameUtils.getProgressions(uuid).add(this);
     }
 
     public ObjectId getId() {
         return id;
-    }
-
-    public UUID getUuid() {
-        return uuid;
     }
 
     public Quest getQuest() {
@@ -56,15 +56,11 @@ public class Progression {
     }
 
     public void setCompleted() {
-        setProgress(getQuest().getCount());
+        progress = getQuest().getCount();
         completed = new Date();
         ProgressionManager.save(this);
-        QuestsUtils.completionAnnounce(uuid, getQuest());
-        // TODO: 16/10/2021 Trigger custom event, for announce, quests check, bonus check
-    }
-
-    public Date getCompleted() {
-        return completed;
+        Bukkit.getScheduler().runTask(GamePlugin.getPlugin(), () ->
+                Bukkit.getPluginManager().callEvent(new PlayerQuestComplete(Bukkit.getPlayer(uuid), getQuest(), this)));
     }
 
     public boolean isCompleted() {

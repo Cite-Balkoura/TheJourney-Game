@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -22,6 +23,7 @@ public class Shoot implements Listener {
 
     public Shoot(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
         } else if (quest.getPayload().contains(",")) {
@@ -57,7 +59,7 @@ public class Shoot implements Listener {
         if (entity!=null &&  !event.getEntity().getType().equals(entity)) return;
         if (entity==null && !entities.contains(event.getEntity().getType())) return;
         if (event.getEntity().getKiller()==null) return;
-        if (QuestsUtils.hasCompleted(event.getEntity().getKiller().getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(event.getEntity().getKiller().getUniqueId(), quest).addProgress();
+        if (GameUtils.hasCompleted(event.getEntity().getKiller().getUniqueId(), quest)) return;
+        GameUtils.getProgression(event.getEntity().getKiller().getUniqueId(), quest).addProgress();
     }
 }

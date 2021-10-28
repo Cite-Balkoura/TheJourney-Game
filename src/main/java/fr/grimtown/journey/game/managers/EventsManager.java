@@ -1,9 +1,9 @@
-package fr.grimtown.journey.quests.managers;
+package fr.grimtown.journey.game.managers;
 
 import dev.morphia.Datastore;
 import dev.morphia.query.experimental.filters.Filters;
 import fr.grimtown.journey.GamePlugin;
-import fr.grimtown.journey.quests.classes.Event;
+import fr.grimtown.journey.game.classes.Event;
 
 public class EventsManager {
     private static final Datastore DATASTORE = GamePlugin.getDatastore("master");

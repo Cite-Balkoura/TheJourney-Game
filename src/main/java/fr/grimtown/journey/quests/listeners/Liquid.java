@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -29,14 +30,14 @@ public class Liquid implements Listener {
     public void onPlayerNetherWater(PlayerBucketEmptyEvent event) {
         if (!event.getPlayer().getWorld().getName().endsWith("_nether")) return;
         if (!material.equals(Material.WATER_BUCKET) || !event.getBucket().equals(material)) return;
-        if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(event.getPlayer().getUniqueId(), quest).setCompleted();
+        if (GameUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
+        GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).setCompleted();
     }
 
     @EventHandler (ignoreCancelled = true)
     public void onPlayerTakeLava(PlayerBucketFillEvent event) {
         if (!material.equals(Material.LAVA) || !event.getBlockClicked().getType().equals(material)) return;
-        if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(event.getPlayer().getUniqueId(), quest).setCompleted();
+        if (GameUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
+        GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).setCompleted();
     }
 }

@@ -2,13 +2,16 @@ package fr.grimtown.journey;
 
 import dev.morphia.Datastore;
 import fr.grimtown.journey.game.GameManager;
+import fr.grimtown.journey.game.classes.Event;
+import fr.grimtown.journey.game.managers.EventsManager;
 import fr.grimtown.journey.quests.QuestsManager;
-import fr.grimtown.journey.quests.classes.Event;
-import fr.grimtown.journey.quests.managers.EventsManager;
 import fr.grimtown.journey.utils.MongoDB;
+import fr.mrmicky.fastinv.FastInvManager;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -22,19 +25,21 @@ public class GamePlugin extends JavaPlugin {
     /* Event */
     private static Event mcEvent;
     private static String universe;
+    private static GameManager manager;
 
     @Override
     public void onEnable() {
         plugin = this;
+        FastInvManager.register(this);
         /* MongoDB */
-        datastoreMap = MongoDB.getDatastoreMap(this.getConfig());
+        datastoreMap = MongoDB.getDatastoreMap(getConfigs());
         /* Event load */
-        universe = this.getConfig().getString("game.universe");
+        universe = getConfigs().getString("game.universe");
         Bukkit.getLogger().info("Loaded universe: " + universe);
-        mcEvent = EventsManager.getEvent(this.getConfig().getString("data.event-name"));
+        mcEvent = EventsManager.getEvent(getConfigs().getString("data.event-name"));
         Bukkit.getLogger().info("Loaded event: " + mcEvent.getName());
-        new GameManager(this);
-        Bukkit.getScheduler().runTaskAsynchronously(this, ()-> new QuestsManager(this));
+        manager = new GameManager(this);
+        Bukkit.getScheduler().runTaskAsynchronously(this, ()-> new QuestsManager(this, manager));
     }
 
     /**
@@ -42,6 +47,14 @@ public class GamePlugin extends JavaPlugin {
      */
     public static Plugin getPlugin() {
         return plugin;
+    }
+
+    /**
+     * Get config
+     */
+    @NotNull
+    public static FileConfiguration getConfigs() {
+        return plugin.getConfig();
     }
 
     /**
@@ -54,6 +67,13 @@ public class GamePlugin extends JavaPlugin {
      */
     public static String getUniverse() {
         return universe;
+    }
+
+    /**
+     * Get the current game manager
+     */
+    public static GameManager getManager() {
+        return manager;
     }
 
     /**

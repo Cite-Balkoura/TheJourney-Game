@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ public class Beacon implements Listener {
 
     public Beacon(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
         } else {
@@ -38,7 +40,7 @@ public class Beacon implements Listener {
         if (cause==null && !(event.getCause().equals(EntityPotionEffectEvent.Cause.BEACON) ||
                 event.getCause().equals(EntityPotionEffectEvent.Cause.CONDUIT))) return;
         if (cause!=null && !event.getCause().equals(cause)) return;
-        if (QuestsUtils.hasCompleted(player.getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(player.getUniqueId(), quest).addProgress();
+        if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
+        GameUtils.getProgression(player.getUniqueId(), quest).addProgress();
     }
 }

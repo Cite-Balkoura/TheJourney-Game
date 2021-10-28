@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ public class Effect implements Listener {
     private final HashMap<BrewerInventory, ArrayList<Integer>> potions = new HashMap<>();
     public Effect(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             effectType = null;
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
@@ -39,7 +41,7 @@ public class Effect implements Listener {
         if (event.getNewEffect()==null) return;
         if (!(event.getEntity() instanceof Player player)) return;
         if (effectType!=null && !event.getNewEffect().getType().equals(effectType)) return;
-        if (QuestsUtils.hasCompleted(player.getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(player.getUniqueId(), quest).addProgress();
+        if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
+        GameUtils.getProgression(player.getUniqueId(), quest).addProgress();
     }
 }

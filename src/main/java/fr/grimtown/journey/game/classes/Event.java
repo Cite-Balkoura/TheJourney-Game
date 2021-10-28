@@ -1,4 +1,4 @@
-package fr.grimtown.journey.quests.classes;
+package fr.grimtown.journey.game.classes;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;

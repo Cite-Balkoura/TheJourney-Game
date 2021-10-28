@@ -1,10 +1,10 @@
 {
     "_t": "Quest",
     "universe": "SKY_LAND",
-    "name": "Test Eat potatoes",
+    "name": "Test Growth things",
     "lore": "",
     "pos": 50,
-    "type": "Eat",
-    "count": 4,
-    "payload": "backed_potatoes,potato,carrot"
+    "type": "Growth",
+    "count": 2,
+    "payload": "ANY"
 }

@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ public class Explore implements Listener {
     private World questWorld = null;
     public Explore(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         Bukkit.getServer().getWorlds().forEach(world -> {
             if (world.getName().equals(quest.getPayload())) questWorld = world;
         });
@@ -35,18 +37,18 @@ public class Explore implements Listener {
     @EventHandler (ignoreCancelled = true)
     public void onStructureExplore(PlayerMoveEvent event) {
         if (questStructure==null) return;
-        if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
+        if (GameUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
         Location structure = event.getTo().getWorld()
                 .locateNearestStructure(event.getTo(), questStructure, 1, false);
         if (structure==null || !event.getPlayer().getChunk().equals(structure.getChunk())) return;
-        QuestsUtils.getProgression(event.getPlayer().getUniqueId(), quest).setCompleted();
+        GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).setCompleted();
     }
 
     @EventHandler (ignoreCancelled = true)
     public void onWorldExplore(PlayerMoveEvent event) {
         if (questWorld==null) return;
-        if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
+        if (GameUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
         if (event.getTo().getWorld().equals(questWorld))
-            QuestsUtils.getProgression(event.getPlayer().getUniqueId(), quest).setCompleted();
+            GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).setCompleted();
     }
 }

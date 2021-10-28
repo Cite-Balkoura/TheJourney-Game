@@ -1,5 +1,15 @@
 game:
+  prefix: "[TheJourney]"
   universe: "SKY_LAND"
+  messages:
+    complete-quest: "You finish quest <QUEST_NAME>"
+    complete-bonus: "You finish the bonus quest <QUEST_NAME>"
+    quests-count: "Quests finished on this universe <DONE>/<COUNT>"
+    all-completed: "You complete all quests on this universe, you can go to the next universe."
+    universe-switch-warning: "§cBe careful you will lost all your inventory, only enderchest is saved."
+  gui:
+    size: 3
+    title: "SKY LAND"
 #
 
 data:

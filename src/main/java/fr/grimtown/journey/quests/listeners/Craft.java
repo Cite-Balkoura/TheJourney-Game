@@ -1,7 +1,8 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
+import fr.grimtown.journey.game.classes.Progression;
 import fr.grimtown.journey.quests.QuestsUtils;
-import fr.grimtown.journey.quests.classes.Progression;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -20,6 +21,7 @@ public class Craft implements Listener {
     private final Material material;
     public Craft(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             material = null;
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
@@ -37,13 +39,13 @@ public class Craft implements Listener {
     public void onPlayerCraft(CraftItemEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
         if (material!=null && !event.getRecipe().getResult().getType().equals(material)) return;
-        if (QuestsUtils.hasCompleted(player.getUniqueId(), quest)) return;
+        if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
         if (!event.getAction().equals(InventoryAction.PICKUP_ALL) && !event.getAction().equals(InventoryAction.PICKUP_HALF)) {
             event.setResult(Event.Result.DENY);
             event.setCancelled(true);
             return;
         }
-        Progression progression = QuestsUtils.getProgression(player.getUniqueId(), quest);
+        Progression progression = GameUtils.getProgression(player.getUniqueId(), quest);
         int loop = event.getRecipe().getResult().getAmount();
         while (loop > 0 && quest.getCount() > progression.getProgress()) {
             progression.addProgress();

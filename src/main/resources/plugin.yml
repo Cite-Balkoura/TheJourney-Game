@@ -9,6 +9,4 @@ authors:
 commands:
   journey:
     aliases:
-      - thejourney
-      - grimtownjourney
-      - grimtownthejourney
+      - quest

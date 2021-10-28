@@ -1,8 +1,9 @@
 package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.GamePlugin;
+import fr.grimtown.journey.game.GameUtils;
+import fr.grimtown.journey.game.classes.Progression;
 import fr.grimtown.journey.quests.QuestsUtils;
-import fr.grimtown.journey.quests.classes.Progression;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -24,8 +25,10 @@ public class Inventory implements Listener {
     private final Quest quest;
     private Material material;
     private final ArrayList<Material> materials = new ArrayList<>();
+
     public Inventory(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
         } else if (quest.getPayload().contains(",")) {
@@ -72,19 +75,19 @@ public class Inventory implements Listener {
      * Check inventory of player to check if quest item can be found on it
      */
     private void inventoryChangeEvent(Player player) {
-        if (QuestsUtils.hasCompleted(player.getUniqueId(), quest)) return;
+        if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
         if (quest.getCount()>0) {
             Arrays.stream(player.getInventory().getContents()).forEach(itemStack -> {
                 if (itemStack == null) return;
                 if (material!=null && !itemStack.getType().equals(material)) return;
                 if (material==null && !materials.contains(itemStack.getType())) return;
-                ItemStack item = itemProcess(itemStack, QuestsUtils.getProgression(player.getUniqueId(), quest));
+                ItemStack item = itemProcess(itemStack, GameUtils.getProgression(player.getUniqueId(), quest));
                 if (item.getAmount() <= 0) itemStack.setType(Material.AIR);
                 else itemStack.setAmount(item.getAmount());
             });
-        } else {
+        } else {// TODO: 29/10/2021 Issue here !!
             if (materials.stream().allMatch(material -> player.getInventory().contains(material, quest.getCount()*-1))) {
-                QuestsUtils.getProgression(player.getUniqueId(), quest).setCompleted();
+                GameUtils.getProgression(player.getUniqueId(), quest).setCompleted();
                 Arrays.stream(player.getInventory().getContents()).forEach(itemStack -> {
                     if (itemStack == null || !materials.contains(itemStack.getType())) return;
                     itemStack.setAmount(itemStack.getAmount() - quest.getCount()*-1);

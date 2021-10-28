@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ public class Death implements Listener {
     private EntityDamageEvent.DamageCause damageCause;
     public Death(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         try {
             damageCause = EntityDamageEvent.DamageCause.valueOf(quest.getPayload().toUpperCase(Locale.ROOT));
             QuestsUtils.questLoadLog(quest.getName(), damageCause.toString());
@@ -30,7 +32,7 @@ public class Death implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (event.getEntity().getLastDamageCause()==null) return;
         if (!event.getEntity().getLastDamageCause().getCause().equals(damageCause)) return;
-        if (QuestsUtils.hasCompleted(event.getEntity().getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(event.getEntity().getUniqueId(), quest).addProgress();
+        if (GameUtils.hasCompleted(event.getEntity().getUniqueId(), quest)) return;
+        GameUtils.getProgression(event.getEntity().getUniqueId(), quest).addProgress();
     }
 }

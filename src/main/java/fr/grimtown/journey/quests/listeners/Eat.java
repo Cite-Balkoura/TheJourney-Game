@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ public class Eat implements Listener {
 
     public Eat(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
         } else if (quest.getPayload().contains(",")) {
@@ -47,20 +49,20 @@ public class Eat implements Listener {
         }
     }
 
-    @EventHandler (ignoreCancelled = true)// TODO: 28/10/2021 Test it
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerEat(FoodLevelChangeEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         if (event.getItem()==null) return;
-        if (QuestsUtils.hasCompleted(player.getUniqueId(), quest)) return;
+        if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
         if (quest.getCount()>=0) {
             if (material!=null && !event.getItem().getType().equals(material)) return;
             if (material==null && !materials.contains(event.getItem().getType())) return;
-            QuestsUtils.getProgression(player.getUniqueId(), quest).addProgress();
+            GameUtils.getProgression(player.getUniqueId(), quest).addProgress();
         } else {
             HashSet<Material> foods = eaten.getOrDefault(player, new HashSet<>());
             if (materials.contains(event.getItem().getType())) foods.add(event.getItem().getType());
             if (foods.size()==materials.size()) {
-                QuestsUtils.getProgression(player.getUniqueId(), quest).setCompleted();
+                GameUtils.getProgression(player.getUniqueId(), quest).setCompleted();
                 eaten.remove(player);
             } else eaten.put(player, foods);
         }

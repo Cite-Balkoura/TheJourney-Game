@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -22,6 +23,7 @@ public class Hit implements Listener {
 
     public Hit(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
         } else if (quest.getPayload().contains(",")) {
@@ -55,7 +57,7 @@ public class Hit implements Listener {
         if (entity!=null &&  !event.getEntity().getType().equals(entity)) return;
         if (entity==null && !entities.contains(event.getEntity().getType())) return;
         if (!(event.getDamager() instanceof Player player)) return;
-        if (QuestsUtils.hasCompleted(player.getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(player.getUniqueId(), quest).addProgress();
+        if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
+        GameUtils.getProgression(player.getUniqueId(), quest).addProgress();
     }
 }

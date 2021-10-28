@@ -1,5 +1,6 @@
 package fr.grimtown.journey.quests.listeners;
 
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
@@ -18,6 +19,7 @@ public class Enchant implements Listener {
 
     public Enchant(Quest quest) {
         this.quest = quest;
+        quest.setListeners(this);
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             enchantment = null;
         } else {
@@ -34,7 +36,7 @@ public class Enchant implements Listener {
     @EventHandler (ignoreCancelled = true)
     public void onPlayerEnchant(EnchantItemEvent event) {
         if (enchantment!=null && !event.getEnchantsToAdd().containsKey(enchantment)) return;
-        if (QuestsUtils.hasCompleted(event.getEnchanter().getUniqueId(), quest)) return;
-        QuestsUtils.getProgression(event.getEnchanter().getUniqueId(), quest).addProgress();
+        if (GameUtils.hasCompleted(event.getEnchanter().getUniqueId(), quest)) return;
+        GameUtils.getProgression(event.getEnchanter().getUniqueId(), quest).addProgress();
     }
 }
