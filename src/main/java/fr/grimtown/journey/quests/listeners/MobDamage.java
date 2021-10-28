@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,13 +18,14 @@ public class MobDamage implements Listener {
     public MobDamage(Quest quest) {
         this.quest = quest;
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
-            entity = null;
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
         } else {
             try {
                 entity = EntityType.valueOf(quest.getPayload().toUpperCase(Locale.ROOT));
                 QuestsUtils.questLoadLog(quest.getName(), entity.toString());
-            } catch (IllegalArgumentException ignore) {
+            } catch (IllegalArgumentException exception) {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                exception.printStackTrace();
                 HandlerList.unregisterAll(this);
             }
         }

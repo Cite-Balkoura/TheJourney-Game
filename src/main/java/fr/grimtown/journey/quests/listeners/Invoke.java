@@ -30,13 +30,15 @@ public class Invoke implements Listener {
             try {
                 reason = CreatureSpawnEvent.SpawnReason.valueOf(quest.getPayload().toUpperCase(Locale.ROOT));
                 QuestsUtils.questLoadLog(quest.getName(), reason.toString());
-            } catch (IllegalArgumentException ignore) {
+            } catch (IllegalArgumentException exception) {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                exception.printStackTrace();
                 HandlerList.unregisterAll(this);
             }
         }
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerBlockPlace(BlockPlaceEvent event) {
         lastBlock.put(event.getPlayer(), event.getBlock().getLocation());
         Bukkit.getScheduler().runTaskLaterAsynchronously(GamePlugin.getPlugin(), ()-> {
@@ -44,7 +46,7 @@ public class Invoke implements Listener {
         }, 10);
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerInvoke(CreatureSpawnEvent event) {
         if (!event.getSpawnReason().toString().contains("BUILD_")) return;
         if (reason!=null && !event.getSpawnReason().equals(reason)) return;

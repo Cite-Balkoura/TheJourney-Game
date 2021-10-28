@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -26,11 +27,14 @@ public class Effect implements Listener {
         } else {
             effectType = PotionEffectType.getByName(quest.getPayload().toUpperCase(Locale.ROOT));
             if (effectType!=null) QuestsUtils.questLoadLog(quest.getName(), effectType.toString());
-            else HandlerList.unregisterAll(this);
+            else {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                HandlerList.unregisterAll(this);
+            }
         }
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerGetPotion(EntityPotionEffectEvent event) {
         if (event.getNewEffect()==null) return;
         if (!(event.getEntity() instanceof Player player)) return;

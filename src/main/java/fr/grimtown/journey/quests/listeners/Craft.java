@@ -3,6 +3,7 @@ package fr.grimtown.journey.quests.listeners;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Progression;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -25,7 +26,10 @@ public class Craft implements Listener {
         } else {
             material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
             if (material != null) QuestsUtils.questLoadLog(quest.getName(), material.toString());
-            else HandlerList.unregisterAll(this);
+            else {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                HandlerList.unregisterAll(this);
+            }
         }
     }
 

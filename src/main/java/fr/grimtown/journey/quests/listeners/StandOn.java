@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -25,7 +26,10 @@ public class StandOn implements Listener {
                     .forEach(materialType -> {
                         Material material = Material.getMaterial(materialType.toUpperCase(Locale.ROOT));
                         if (material!=null) blocks.add(material);
-                        else HandlerList.unregisterAll(this);
+                        else {
+                            Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                            HandlerList.unregisterAll(this);
+                        }
                     });
             QuestsUtils.questLoadLog(quest.getName(),
                     blocks.stream().map(Enum::toString).collect(Collectors.joining(",")));
@@ -34,7 +38,10 @@ public class StandOn implements Listener {
             if (material!=null) {
                 blocks.set(0, material);
                 QuestsUtils.questLoadLog(quest.getName(), material.toString());
-            } else HandlerList.unregisterAll(this);
+            } else {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                HandlerList.unregisterAll(this);
+            }
         }
     }
 

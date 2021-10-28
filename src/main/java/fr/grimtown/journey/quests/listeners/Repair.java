@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,24 +17,24 @@ import java.util.Locale;
 
 public class Repair implements Listener {
     private final Quest quest;
-    private final Material material;
+    private Material material;
 
     public Repair(Quest quest) {
         this.quest = quest;
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
-            material = null;
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
         } else {
             material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
             if (material != null) {
                 QuestsUtils.questLoadLog(quest.getName(), material.toString());
             } else {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
                 HandlerList.unregisterAll(this);
             }
         }
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerRepair(InventoryClickEvent event) {
         if (!event.getInventory().getType().equals(InventoryType.ANVIL)) return;
         if (!(event.getWhoClicked() instanceof Player player)) return;

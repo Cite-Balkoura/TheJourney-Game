@@ -7,17 +7,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 
 public class QuestsUtils {
+    public static final HashMap<UUID, ArrayList<Progression>> playerProgression = new HashMap<>();
     /**
      * Check if player has completed this quest (Based only on the cache progress)
      */
     public static boolean hasCompleted(UUID uuid, Quest quest) {
-        if (!QuestsManager.playerProgression.containsKey(uuid))
-            QuestsManager.playerProgression.put(uuid, ProgressionManager.getProgressions(uuid));
-        Optional<Progression> optionalProgression = QuestsManager.playerProgression.get(uuid).stream()
+        if (!playerProgression.containsKey(uuid))
+            playerProgression.put(uuid, ProgressionManager.getProgressions(uuid));
+        Optional<Progression> optionalProgression = playerProgression.get(uuid).stream()
                 .filter(progression -> progression.getQuest().getId().equals(quest.getId())).findFirst();
         return optionalProgression.map(Progression::isCompleted).orElse(false);
     }
@@ -26,9 +29,9 @@ public class QuestsUtils {
      * Get a quest Progression for player, if no completion exist yet, create it
      */
     public static Progression getProgression(UUID uuid, Quest quest) {
-        if (!QuestsManager.playerProgression.containsKey(uuid))
-            QuestsManager.playerProgression.put(uuid, ProgressionManager.getProgressions(uuid));
-        Optional<Progression> optionalProgression = QuestsManager.playerProgression.get(uuid).stream()
+        if (!playerProgression.containsKey(uuid))
+            playerProgression.put(uuid, ProgressionManager.getProgressions(uuid));
+        Optional<Progression> optionalProgression = playerProgression.get(uuid).stream()
                 .filter(progression -> progression.getQuest().getId().equals(quest.getId())).findFirst();
         return optionalProgression.orElseGet(() -> new Progression(uuid, quest));
     }

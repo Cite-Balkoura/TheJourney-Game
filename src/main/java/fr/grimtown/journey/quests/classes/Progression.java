@@ -3,7 +3,6 @@ package fr.grimtown.journey.quests.classes;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.experimental.MorphiaReference;
-import fr.grimtown.journey.quests.QuestsManager;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.managers.ProgressionManager;
 import org.bson.types.ObjectId;
@@ -26,7 +25,7 @@ public class Progression {
         this.uuid = uuid;
         this.quest = MorphiaReference.wrap(quest);
         progress = 0;
-        QuestsManager.playerProgression.get(uuid).add(this);
+        QuestsUtils.playerProgression.get(uuid).add(this);
     }
 
     public ObjectId getId() {

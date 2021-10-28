@@ -7,14 +7,15 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockFertilizeEvent;
 
 import java.util.Locale;
 
-public class Place implements Listener {
+public class Growth implements Listener {
     private final Quest quest;
     private Material material;
-    public Place(Quest quest) {
+
+    public Growth(Quest quest) {
         this.quest = quest;
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
@@ -28,9 +29,10 @@ public class Place implements Listener {
         }
     }
 
-    @EventHandler (ignoreCancelled = true)
-    public void onPlayerBlockPlace(BlockPlaceEvent event) {
-        if (material!=null && !event.getBlock().getType().equals(material)) return;
+    @EventHandler
+    public void onBoneMeal(BlockFertilizeEvent event) {
+        if (event.getBlocks().stream().noneMatch(blockState -> blockState.getType().equals(material))) return;
+        if (event.getPlayer()==null) return;
         if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
         QuestsUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
     }

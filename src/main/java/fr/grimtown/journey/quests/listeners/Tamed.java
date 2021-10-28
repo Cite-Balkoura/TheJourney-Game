@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +20,7 @@ public class Tamed implements Listener {
             entity = EntityType.valueOf(quest.getPayload());
             QuestsUtils.questLoadLog(quest.getName(), quest.getPayload());
         } catch (IllegalArgumentException exception) {
+            Bukkit.getLogger().warning("Can't load: " + quest.getName());
             exception.printStackTrace();
             HandlerList.unregisterAll(this);
         }

@@ -33,7 +33,10 @@ public class Inventory implements Listener {
                     .forEach(materialType -> {
                         Material material = Material.getMaterial(materialType.toUpperCase(Locale.ROOT));
                         if (material!=null) materials.add(material);
-                        else HandlerList.unregisterAll(this);
+                        else {
+                            Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                            HandlerList.unregisterAll(this);
+                        }
                     });
             if (quest.getCount() < 0) QuestsUtils.questLoadLog(quest.getName(), "Exclusive=" +
                     materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
@@ -42,7 +45,10 @@ public class Inventory implements Listener {
         } else {
             material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
             if (material != null) QuestsUtils.questLoadLog(quest.getName(), material.toString());
-            else HandlerList.unregisterAll(this);
+            else {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                HandlerList.unregisterAll(this);
+            }
         }
     }
 

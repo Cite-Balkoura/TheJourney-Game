@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,16 +15,18 @@ import java.util.Locale;
 
 public class Upgrade implements Listener {
     private final Quest quest;
-    private final Material material;// TODO: 16/10/2021 Multiples
+    private Material material;// TODO: 16/10/2021 Multiples
     public Upgrade(Quest quest) {
         this.quest = quest;
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
-            material = null;
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
         } else {
             material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
             if (material != null) QuestsUtils.questLoadLog(quest.getName(), material.toString());
-            else HandlerList.unregisterAll(this);
+            else {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                HandlerList.unregisterAll(this);
+            }
         }
     }
 

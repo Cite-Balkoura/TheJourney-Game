@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -29,7 +30,9 @@ public class Shoot implements Listener {
                         try {
                             EntityType entity = EntityType.valueOf(materialType.toUpperCase(Locale.ROOT));
                             entities.add(entity);
-                        } catch (IllegalArgumentException ignore) {
+                        } catch (IllegalArgumentException exception) {
+                            Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                            exception.printStackTrace();
                             HandlerList.unregisterAll(this);
                         }
                     });
@@ -39,7 +42,9 @@ public class Shoot implements Listener {
             try {
                 entity = EntityType.valueOf(quest.getPayload().toUpperCase(Locale.ROOT));
                 QuestsUtils.questLoadLog(quest.getName(), entity.toString());
-            } catch (IllegalArgumentException ignore) {
+            } catch (IllegalArgumentException exception) {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                exception.printStackTrace();
                 HandlerList.unregisterAll(this);
             }
         }

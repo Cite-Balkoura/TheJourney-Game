@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,7 +24,10 @@ public class Equip implements Listener {
         this.quest = quest;
         ArrayList<String> materialList = new ArrayList<>(Arrays.stream(quest.getPayload().split(",")).toList());
         if (materialList.get(0)!=null) helmet = Material.getMaterial(materialList.get(0));
-        else HandlerList.unregisterAll(this);
+        else {
+            Bukkit.getLogger().warning("Can't load: " + quest.getName());
+            HandlerList.unregisterAll(this);
+        }
         if (materialList.get(1)!=null) chest = Material.getMaterial(materialList.get(1));
         if (materialList.get(2)!=null) leggings = Material.getMaterial(materialList.get(2));
         if (materialList.get(3)!=null) boots = Material.getMaterial(materialList.get(3));

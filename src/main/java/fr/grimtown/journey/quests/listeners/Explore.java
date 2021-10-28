@@ -26,7 +26,10 @@ public class Explore implements Listener {
             questStructure = StructureType.getStructureTypes().get(quest.getPayload().toLowerCase(Locale.ROOT));
         if (questWorld!=null) QuestsUtils.questLoadLog(quest.getName(), "world=" + questWorld.getName());
         else if (questStructure!=null) QuestsUtils.questLoadLog(quest.getName(), "structure=" + questStructure.getName());
-        else HandlerList.unregisterAll(this);
+        else {
+            Bukkit.getLogger().warning("Can't load: " + quest.getName());
+            HandlerList.unregisterAll(this);
+        }
     }
 
     @EventHandler (ignoreCancelled = true)

@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
@@ -24,12 +25,13 @@ public class Enchant implements Listener {
             if (enchantment != null) {
                 QuestsUtils.questLoadLog(quest.getName(), enchantment.getKey().asString());
             } else {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
                 HandlerList.unregisterAll(this);
             }
         }
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerEnchant(EnchantItemEvent event) {
         if (enchantment!=null && !event.getEnchantsToAdd().containsKey(enchantment)) return;
         if (QuestsUtils.hasCompleted(event.getEnchanter().getUniqueId(), quest)) return;

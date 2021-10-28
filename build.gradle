@@ -25,5 +25,5 @@ dependencies {
     implementation group: 'com.github.tutur1004', name: 'MilekatUtils', version: '879026bfd2'
     compileOnly group: 'io.papermc.paper', name: 'paper-api', version: '1.17.1-R0.1-SNAPSHOT'
     implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: '4.3.2'
-    implementation group: 'dev.morphia.morphia', name: 'morphia-core', version: '2.2.1'
+    implementation group: 'dev.morphia.morphia', name: 'morphia-core', version: '2.2.2'
 }

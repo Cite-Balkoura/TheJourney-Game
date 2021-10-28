@@ -1,10 +1,10 @@
 {
     "_t": "Quest",
     "universe": "SKY_LAND",
-    "name": "Test Explore STRONGHOLD",
+    "name": "Test Eat potatoes",
     "lore": "",
     "pos": 50,
-    "type": "Explore",
-    "count": 2,
-    "payload": "STRONGHOLD"
+    "type": "Eat",
+    "count": 4,
+    "payload": "backed_potatoes,potato,carrot"
 }

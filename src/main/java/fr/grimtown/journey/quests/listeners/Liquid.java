@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -18,7 +19,10 @@ public class Liquid implements Listener {
         this.quest = quest;
         material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
         if (material != null) QuestsUtils.questLoadLog(quest.getName(), material.toString());
-        else HandlerList.unregisterAll(this);
+        else {
+            Bukkit.getLogger().warning("Can't load: " + quest.getName());
+            HandlerList.unregisterAll(this);
+        }
     }
 
     @EventHandler (ignoreCancelled = true)

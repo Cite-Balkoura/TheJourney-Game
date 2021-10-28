@@ -29,7 +29,6 @@ public class Quest {
         Eat,// TODO: 28/10/2021 Test !
         Experience,
         Explore,
-        Health,
         Hit,
         Inventory,
         Kill,
@@ -53,7 +52,6 @@ public class Quest {
         MobDamage,
         StandOn,
         Upgrade,// TODO: 16/10/2021 Multiples
-
         Growth
     }
 

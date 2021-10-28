@@ -33,11 +33,14 @@ public class Brew implements Listener {
         } else {
             effectType = PotionEffectType.getByName(quest.getPayload().toUpperCase(Locale.ROOT));
             if (effectType!=null) QuestsUtils.questLoadLog(quest.getName(), effectType.toString());
-            else HandlerList.unregisterAll(this);
+            else {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                HandlerList.unregisterAll(this);
+            }
         }
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onBrewingStandBrew(BrewEvent event) {
         Bukkit.getScheduler().runTaskLaterAsynchronously(GamePlugin.getPlugin(),() -> {
             this.potions.remove(event.getContents());
@@ -58,7 +61,7 @@ public class Brew implements Listener {
         }, 1);
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onBrewingStandClick(InventoryClickEvent event) {
         if (event.getCurrentItem()==null) return;
         if (!(event.getWhoClicked() instanceof Player player)) return;

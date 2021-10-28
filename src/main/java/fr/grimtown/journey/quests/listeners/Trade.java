@@ -15,7 +15,7 @@ public class Trade implements Listener {
         QuestsUtils.questLoadLog(quest.getName(), "NONE");
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerTradeVillager(InventoryClickEvent event) {
         if (!event.getInventory().getType().equals(InventoryType.MERCHANT)) return;
         if (!(event.getWhoClicked() instanceof Player player)) return;

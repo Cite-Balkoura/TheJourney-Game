@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,10 +15,9 @@ import java.util.stream.Collectors;
 
 public class Eat implements Listener {
     private final Quest quest;
-    // TODO: 28/10/2021 Multiples
     private Material material;
     private final ArrayList<Material> materials = new ArrayList<>();
-    private final HashMap<Player, LinkedList<Material>> eaten = new HashMap<>();
+    private final HashMap<Player, HashSet<Material>> eaten = new HashMap<>();
 
     public Eat(Quest quest) {
         this.quest = quest;
@@ -28,7 +28,10 @@ public class Eat implements Listener {
                     .forEach(materialType -> {
                         Material material = Material.getMaterial(materialType.toUpperCase(Locale.ROOT));
                         if (material!=null) materials.add(material);
-                        else HandlerList.unregisterAll(this);
+                        else {
+                            Bukkit.getLogger().warning("Can't load material: " + materialType);
+                            HandlerList.unregisterAll(this);
+                        }
                     });
             if (quest.getCount() < 0) QuestsUtils.questLoadLog(quest.getName(), "Exclusive=" +
                     materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
@@ -37,7 +40,10 @@ public class Eat implements Listener {
         } else {
             material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
             if (material != null) QuestsUtils.questLoadLog(quest.getName(), material.toString());
-            else HandlerList.unregisterAll(this);
+            else {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                HandlerList.unregisterAll(this);
+            }
         }
     }
 
@@ -46,12 +52,12 @@ public class Eat implements Listener {
         if (!(event.getEntity() instanceof Player player)) return;
         if (event.getItem()==null) return;
         if (QuestsUtils.hasCompleted(player.getUniqueId(), quest)) return;
-        if (quest.getCount()>0) {
+        if (quest.getCount()>=0) {
             if (material!=null && !event.getItem().getType().equals(material)) return;
             if (material==null && !materials.contains(event.getItem().getType())) return;
             QuestsUtils.getProgression(player.getUniqueId(), quest).addProgress();
         } else {
-            LinkedList<Material> foods = eaten.getOrDefault(player, new LinkedList<>());
+            HashSet<Material> foods = eaten.getOrDefault(player, new HashSet<>());
             if (materials.contains(event.getItem().getType())) foods.add(event.getItem().getType());
             if (foods.size()==materials.size()) {
                 QuestsUtils.getProgression(player.getUniqueId(), quest).setCompleted();

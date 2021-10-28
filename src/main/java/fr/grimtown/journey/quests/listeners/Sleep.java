@@ -14,7 +14,7 @@ public class Sleep implements Listener {
         QuestsUtils.questLoadLog(quest.getName(), "NONE");
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onPlayerSleep(PlayerBedEnterEvent event) {
         if (!event.getBedEnterResult().equals(PlayerBedEnterEvent.BedEnterResult.OK)) return;
         if (QuestsUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;

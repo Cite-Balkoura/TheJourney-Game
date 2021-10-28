@@ -34,7 +34,7 @@ public class GamePlugin extends JavaPlugin {
         mcEvent = EventsManager.getEvent(this.getConfig().getString("data.event-name"));
         Bukkit.getLogger().info("Loaded event: " + mcEvent.getName());
         new GameManager(this);
-        new QuestsManager(this);
+        Bukkit.getScheduler().runTaskAsynchronously(this, ()-> new QuestsManager(this));
     }
 
     /**

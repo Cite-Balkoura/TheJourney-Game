@@ -2,6 +2,7 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -18,7 +19,9 @@ public class Death implements Listener {
         try {
             damageCause = EntityDamageEvent.DamageCause.valueOf(quest.getPayload().toUpperCase(Locale.ROOT));
             QuestsUtils.questLoadLog(quest.getName(), damageCause.toString());
-        } catch (IllegalArgumentException ignore) {
+        } catch (IllegalArgumentException exception) {
+            exception.printStackTrace();
+            Bukkit.getLogger().warning("Can't load: " + quest.getName());
             HandlerList.unregisterAll(this);
         }
     }
