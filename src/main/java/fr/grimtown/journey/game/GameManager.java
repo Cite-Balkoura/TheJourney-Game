@@ -1,7 +1,8 @@
 package fr.grimtown.journey.game;
 
 import fr.grimtown.journey.game.classes.Progression;
-import fr.grimtown.journey.game.commands.OpenGui;
+import fr.grimtown.journey.game.commands.OpenMainGui;
+import fr.grimtown.journey.game.commands.OpenQuestGui;
 import fr.grimtown.journey.game.listeners.GameProgress;
 import fr.grimtown.journey.game.listeners.ProgressionLoader;
 import fr.grimtown.journey.game.listeners.RemoveJoinMsg;
@@ -23,7 +24,8 @@ public class GameManager {
         pm.registerEvents(new RemoveJoinMsg(), plugin);
         pm.registerEvents(new ProgressionLoader(this), plugin);
         pm.registerEvents(new GameProgress(this), plugin);
-        plugin.getCommand("journey").setExecutor(new OpenGui());
+        plugin.getCommand("journey").setExecutor(new OpenMainGui());
+        plugin.getCommand("quest").setExecutor(new OpenQuestGui());
     }
 
     public ArrayList<Quest> getLoadedQuests() {

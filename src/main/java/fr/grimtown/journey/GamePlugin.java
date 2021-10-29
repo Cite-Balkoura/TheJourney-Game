@@ -3,6 +3,7 @@ package fr.grimtown.journey;
 import dev.morphia.Datastore;
 import fr.grimtown.journey.game.GameManager;
 import fr.grimtown.journey.game.classes.Event;
+import fr.grimtown.journey.game.classes.Universe;
 import fr.grimtown.journey.game.managers.EventsManager;
 import fr.grimtown.journey.quests.QuestsManager;
 import fr.grimtown.journey.utils.MongoDB;
@@ -24,17 +25,18 @@ public class GamePlugin extends JavaPlugin {
     private static HashMap<String, Datastore> datastoreMap = new HashMap<>();
     /* Event */
     private static Event mcEvent;
-    private static String universe;
+    private static Universe universe;
     private static GameManager manager;
 
     @Override
     public void onEnable() {
         plugin = this;
+        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         FastInvManager.register(this);
         /* MongoDB */
         datastoreMap = MongoDB.getDatastoreMap(getConfigs());
         /* Event load */
-        universe = getConfigs().getString("game.universe");
+        universe = Universe.valueOf(getConfigs().getString("game.universe"));
         Bukkit.getLogger().info("Loaded universe: " + universe);
         mcEvent = EventsManager.getEvent(getConfigs().getString("data.event-name"));
         Bukkit.getLogger().info("Loaded event: " + mcEvent.getName());
@@ -65,7 +67,7 @@ public class GamePlugin extends JavaPlugin {
     /**
      * Get loaded Universe shortcut
      */
-    public static String getUniverse() {
+    public static Universe getUniverse() {
         return universe;
     }
 

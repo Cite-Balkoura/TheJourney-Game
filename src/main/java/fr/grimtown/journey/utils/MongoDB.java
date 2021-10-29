@@ -8,6 +8,7 @@ import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.MapperOptions;
 import fr.grimtown.journey.GamePlugin;
+import fr.grimtown.journey.game.classes.DataPlayer;
 import fr.grimtown.journey.game.classes.Event;
 import fr.grimtown.journey.game.classes.Progression;
 import fr.grimtown.journey.quests.classes.Quest;
@@ -48,7 +49,8 @@ public class MongoDB {
         Datastore datastore = Morphia.createDatastore(MongoClients.create(settings), dbName, MapperOptions.builder()
                 .enablePolymorphicQueries(true)
                 .build());
-        datastore.getMapper().map(Event.class, Progression.class, Quest.class);
+        if (dbName.equalsIgnoreCase("master")) datastore.getMapper().map(Event.class);
+        else datastore.getMapper().map(Progression.class, Quest.class, DataPlayer.class);
         datastore.ensureIndexes();
         datastore.ensureCaps();
         datastore.enableDocumentValidation();

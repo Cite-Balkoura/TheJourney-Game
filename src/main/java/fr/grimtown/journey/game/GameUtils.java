@@ -2,6 +2,7 @@ package fr.grimtown.journey.game;
 
 import fr.grimtown.journey.GamePlugin;
 import fr.grimtown.journey.game.classes.Progression;
+import fr.grimtown.journey.game.classes.Universe;
 import fr.grimtown.journey.game.managers.ProgressionManager;
 import fr.grimtown.journey.quests.classes.Quest;
 
@@ -11,13 +12,24 @@ import java.util.UUID;
 
 public class GameUtils {
     /**
-     * Get Progressions of uuid, create them if no exist
+     * Get Progressions of loaded quests for uuid, create them if no exist
      */
     public static ArrayList<Progression> getProgressions(UUID uuid) {
         if (!GamePlugin.getManager().getPlayerProgression().containsKey(uuid)) {
-            GamePlugin.getManager().getPlayerProgression().put(uuid, ProgressionManager.getProgressions(uuid));
+            ArrayList<Progression> progression = new ArrayList<>(ProgressionManager.getProgressions(uuid).stream()
+                    .filter(loop -> GamePlugin.getManager().getLoadedQuests().stream()
+                            .anyMatch(quest -> quest.getId().equals(loop.getQuest().getId()))).toList());
+            GamePlugin.getManager().getPlayerProgression().put(uuid, progression);
         }
         return GamePlugin.getManager().getPlayerProgression().get(uuid);
+    }
+
+    /**
+     * Get Progressions of quests from specific universe for uuid, create them if no exist
+     */
+    public static ArrayList<Progression> getProgressions(UUID uuid, Universe universe) {
+        return new ArrayList<>(ProgressionManager.getProgressions(uuid).stream()
+                .filter(loop -> loop.getQuest().getUniverse().equals(universe)).toList());
     }
 
     /**
@@ -25,6 +37,15 @@ public class GameUtils {
      */
     public static boolean hasCompleted(UUID uuid, Quest quest) {
         Optional<Progression> optionalProgression = getProgressions(uuid).stream()
+                .filter(progression -> progression.getQuest().getId().equals(quest.getId())).findFirst();
+        return optionalProgression.map(Progression::isCompleted).orElse(false);
+    }
+
+    /**
+     * Check if player has completed this quest (Based only on the cache progress)
+     */
+    public static boolean hasCompleted(UUID uuid, Quest quest, Universe universe) {
+        Optional<Progression> optionalProgression = getProgressions(uuid, universe).stream()
                 .filter(progression -> progression.getQuest().getId().equals(quest.getId())).findFirst();
         return optionalProgression.map(Progression::isCompleted).orElse(false);
     }

@@ -1,6 +1,7 @@
 package fr.grimtown.journey.quests.classes;
 
 import dev.morphia.annotations.*;
+import fr.grimtown.journey.game.classes.Universe;
 import org.bson.types.ObjectId;
 import org.bukkit.event.Listener;
 
@@ -8,7 +9,7 @@ import org.bukkit.event.Listener;
 public class Quest {
     @Id
     private ObjectId id;
-    private String universe;
+    private Universe universe;
     @Indexed(options = @IndexOptions(unique = true))
     private String name;
     private String lore;
@@ -58,6 +59,8 @@ public class Quest {
     public ObjectId getId() {
         return id;
     }
+
+    public Universe getUniverse() { return universe; }
 
     public String getName() {
         return name;

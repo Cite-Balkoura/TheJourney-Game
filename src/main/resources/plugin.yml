@@ -8,5 +8,8 @@ authors:
   - BakaAless (Aless#6161)
 commands:
   journey:
-    aliases:
-      - quest
+    usage: /journey
+    description: "Open main gui"
+  quest:
+    usage: /quest
+    description: "Open quest gui"
