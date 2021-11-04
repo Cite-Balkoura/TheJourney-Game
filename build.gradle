@@ -14,6 +14,7 @@ shadowJar{
 
 repositories {
     maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url "https://repo.dmulloy2.net/repository/public/" }
     maven { url = 'https://jitpack.io' }
     mavenCentral()
     mavenLocal()
@@ -27,4 +28,5 @@ dependencies {
     implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: '4.3.2'
     implementation group: 'dev.morphia.morphia', name: 'morphia-core', version: '2.2.2'
     implementation group: 'fr.mrmicky', name: 'FastInv', version: '3.0.3'
+    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.7.0";
 }

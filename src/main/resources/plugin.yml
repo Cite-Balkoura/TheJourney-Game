@@ -2,6 +2,8 @@ name: TheJourneyGame
 main: fr.grimtown.journey.GamePlugin
 version: 1.0
 api-version: 1.17
+depend:
+  - ProtocolLib
 description: 'Game plugin for The Journey event, event from Cap sur Grimtown !'
 authors:
   - MileKat (tutur1004#8766)
