@@ -18,8 +18,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Inventory implements Listener {
     private final Quest quest;
@@ -41,9 +43,12 @@ public class Inventory implements Listener {
                             HandlerList.unregisterAll(this);
                         }
                     });
-            if (quest.getCount() < 0) QuestsUtils.questLoadLog(quest.getName(), "Exclusive=" +
+            if (quest.getCount() > 0) QuestsUtils.questLoadLog(quest.getName(), "Whitelist=" +
                     materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
-            else QuestsUtils.questLoadLog(quest.getName(), "Whitelist=" +
+            else if (quest.getCount() < 0 && quest.getCount()*-1 < materials.size())
+                QuestsUtils.questLoadLog(quest.getName(), "OneFrom=" +
+                    materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
+            else QuestsUtils.questLoadLog(quest.getName(), "Exclusive=" +
                     materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
         } else {
             material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
@@ -57,8 +62,8 @@ public class Inventory implements Listener {
 
     @EventHandler (ignoreCancelled = true)
     public void onPlayerLoot(EntityPickupItemEvent event) {
-        if (event.getEntity() instanceof Player) Bukkit.getScheduler().runTaskLaterAsynchronously(GamePlugin.getPlugin(),
-                ()-> inventoryChangeEvent((Player) event.getEntity()),1);
+        if (event.getEntity() instanceof Player player) Bukkit.getScheduler().runTaskLaterAsynchronously(
+                GamePlugin.getPlugin(), ()-> inventoryChangeEvent(player),1);
     }
 
     @EventHandler (ignoreCancelled = true)
@@ -76,39 +81,38 @@ public class Inventory implements Listener {
      */
     private void inventoryChangeEvent(Player player) {
         if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
-        if (quest.getCount()>0) {
-            Arrays.stream(player.getInventory().getContents()).forEach(itemStack -> {
-                if (itemStack == null) return;
-                if (material!=null && !itemStack.getType().equals(material)) return;
-                if (material==null && !materials.contains(itemStack.getType())) return;
-                ItemStack item = itemProcess(itemStack, GameUtils.getProgression(player.getUniqueId(), quest));
-                if (item.getAmount() <= 0) itemStack.setType(Material.AIR);
-                else itemStack.setAmount(item.getAmount());
-            });
-        } else {// TODO: 29/10/2021 Issue here !!
-            if (materials.stream().allMatch(material -> player.getInventory().contains(material, quest.getCount()*-1))) {
-                GameUtils.getProgression(player.getUniqueId(), quest).setCompleted();
-                Arrays.stream(player.getInventory().getContents()).forEach(itemStack -> {
-                    if (itemStack == null || !materials.contains(itemStack.getType())) return;
-                    itemStack.setAmount(itemStack.getAmount() - quest.getCount()*-1);
-                    if (itemStack.getAmount() <= 0) itemStack.setType(Material.AIR);
-                    materials.remove(itemStack.getType());
+        Progression progression = GameUtils.getProgression(player.getUniqueId(), quest);
+        if (quest.getCount() > 0) {
+            if (material!=null && player.getInventory().contains(material)) {
+                HashMap<Integer, ItemStack> removed = player.getInventory().removeItem(new ItemStack(material, quest.getCount()));
+                if (removed.isEmpty()) progression.setCompleted();
+                else IntStream.range(0, quest.getCount() - progression.getProgress() - removed.get(0).getAmount())
+                            .forEach(ignored -> progression.addProgress());
+            } else if (!materials.isEmpty() && materials.stream().anyMatch(material -> player.getInventory().contains(material))) {
+                materials.forEach(material -> {
+                    if (progression.isCompleted()) return;
+                    HashMap<Integer, ItemStack> removed = player.getInventory().removeItem(new ItemStack(material, quest.getCount() - progression.getProgress()));
+                    if (removed.isEmpty()) progression.setCompleted();
+                    else IntStream.range(0, quest.getCount() - progression.getProgress() - removed.get(0).getAmount())
+                                .forEach(ignored -> progression.addProgress());
                 });
             }
+        } else if (quest.getCount() < 0 && quest.getCount()*-1 < materials.size()) {
+            int have = (int) materials.stream().filter(material -> player.getInventory().contains(material)).count();
+            if (have >= quest.getCount()*-1) {
+                progression.setCompleted();
+                materials.forEach(material -> player.getInventory().removeItem(new ItemStack(material, 1)));
+            }
+        } else if (quest.getCount()==0) {
+            if (materials.stream().allMatch(material -> player.getInventory().contains(material, 1))) {
+                progression.setCompleted();
+                materials.forEach(material -> player.getInventory().removeItem(new ItemStack(material, 1)));
+            }
+        } else if (quest.getCount()*-1 >= materials.size()) {
+            if (materials.stream().allMatch(material -> player.getInventory().contains(material, quest.getCount()*-1))) {
+                progression.setCompleted();
+                materials.forEach(material -> player.getInventory().removeItem(new ItemStack(material, quest.getCount()*-1)));
+            }
         }
-    }
-
-    /**
-     * Process completion increment and set the new amount of @item
-     */
-    private ItemStack itemProcess(ItemStack item, Progression progression) {
-        if (item.getAmount()==1) {
-            item.setAmount(0);
-            progression.addProgress();
-        } else while (item.getAmount()>=1 && quest.getCount() > progression.getProgress()) {
-            progression.addProgress();
-            item.setAmount(item.getAmount() - 1);
-        }
-        return item;
     }
 }

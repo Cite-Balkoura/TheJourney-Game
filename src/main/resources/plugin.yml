@@ -12,6 +12,12 @@ commands:
   journey:
     usage: /journey
     description: "Open main gui"
+    aliases: j
   quest:
     usage: /quest
     description: "Open quest gui"
+    aliases: q
+  chest:
+    usage: /chest
+    description: "Open journey chest"
+    aliases: c

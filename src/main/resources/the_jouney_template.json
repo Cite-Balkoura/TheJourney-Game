@@ -1,10 +1,11 @@
 {
     "_t": "Quest",
     "universe": "SKY_LAND",
-    "name": "Test Growth things",
-    "lore": "",
-    "pos": 50,
-    "type": "Growth",
-    "count": 2,
-    "payload": "ANY"
+    "name": "Bonus Sky land",
+    "lore": "vdfjhesjv",
+    "pos": 4,
+    "type": "Inventory",
+    "count": -1,
+    "payload": "dandelion,poppy,blue_orchid,allium,azure_bluet,red_tulip,orange_tulip,white_tulip",
+    "bonus": true
 }

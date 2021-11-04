@@ -61,7 +61,7 @@ public class Eat implements Listener {
         } else {
             HashSet<Material> foods = eaten.getOrDefault(player, new HashSet<>());
             if (materials.contains(event.getItem().getType())) foods.add(event.getItem().getType());
-            if (foods.size()==materials.size()) {
+            if (foods.size()==materials.size() || foods.size() >= quest.getCount()*-1) {// TODO: 29/10/2021 test
                 GameUtils.getProgression(player.getUniqueId(), quest).setCompleted();
                 eaten.remove(player);
             } else eaten.put(player, foods);

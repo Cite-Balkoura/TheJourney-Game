@@ -9,9 +9,29 @@ game:
     universe-switch-warning: "§cBe careful you will lost all your inventory, only enderchest is saved."
     player-not-found: "§cCan't found this player."
     no-perms: "§cYou don't have permission to do that."
-  gui:
-    size: 3
-    title: "SKY LAND"
+  main-gui:
+    size: 27
+    title: "The Sky lands"
+    info:
+      name: "Universe: Sky lands"
+      lore: ["Overview:", "Overworld, Nether, End", "14 quests, 1 bonus slot"]
+    stats:
+      name: "Your stats"
+      lore: ["Quests done: <QUESTS>", "Bonus slots: <BONUS>", "Total done: <TOTAL>"]
+    quests:
+      name: "Current quests"
+      lore: ["Click to see", "all the quests", "from this universe"]
+  quests-gui:
+    size: 27
+    title: "Quests"
+    no-quest: " "
+    locked: "Quest locked"
+  journey-chest:
+    size: 9
+    title: "Journey Chest"
+    base-slots: 3
+    locked: "§cSlot locked"
+  base-enderchest-size: 3 #Ender chest size = this + all bonus made by player
 #
 
 data:

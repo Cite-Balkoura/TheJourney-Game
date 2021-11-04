@@ -1,8 +1,10 @@
 package fr.grimtown.journey.game;
 
 import fr.grimtown.journey.game.classes.Progression;
+import fr.grimtown.journey.game.commands.OpenJourneyChest;
 import fr.grimtown.journey.game.commands.OpenMainGui;
 import fr.grimtown.journey.game.commands.OpenQuestGui;
+import fr.grimtown.journey.game.listeners.EndChest;
 import fr.grimtown.journey.game.listeners.GameProgress;
 import fr.grimtown.journey.game.listeners.ProgressionLoader;
 import fr.grimtown.journey.game.listeners.RemoveJoinMsg;
@@ -22,10 +24,12 @@ public class GameManager {
     public GameManager(JavaPlugin plugin) {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new RemoveJoinMsg(), plugin);
+        pm.registerEvents(new EndChest(), plugin);
         pm.registerEvents(new ProgressionLoader(this), plugin);
         pm.registerEvents(new GameProgress(this), plugin);
         plugin.getCommand("journey").setExecutor(new OpenMainGui());
         plugin.getCommand("quest").setExecutor(new OpenQuestGui());
+        plugin.getCommand("chest").setExecutor(new OpenJourneyChest());
     }
 
     public ArrayList<Quest> getLoadedQuests() {

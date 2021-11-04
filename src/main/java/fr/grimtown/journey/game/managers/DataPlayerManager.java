@@ -5,7 +5,6 @@ import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.experimental.updates.UpdateOperators;
 import fr.grimtown.journey.GamePlugin;
 import fr.grimtown.journey.game.classes.DataPlayer;
-import fr.grimtown.journey.game.classes.Universe;
 
 import java.util.UUID;
 
@@ -22,12 +21,31 @@ public class DataPlayerManager {
     }
 
     /**
-     * Update the universe of uuid
+     * Get game data of player by his lastNameSeen
      */
-    public static void updateUsername(UUID uuid, Universe universe) {
-        DATASTORE.find(DataPlayer.class)
+    public static DataPlayer getDataPlayer(UUID uuid) {
+        return DATASTORE.find(DataPlayer.class)
                 .filter(Filters.eq("uuid", uuid))
-                .update(UpdateOperators.set("universe", universe))
+                .first();
+    }
+
+    /**
+     * Update bonus count of uuid
+     */
+    public static void updateBonus(DataPlayer dataPlayer) {
+        DATASTORE.find(DataPlayer.class)
+                .filter(Filters.eq("uuid", dataPlayer.getUuid()))
+                .update(UpdateOperators.set("bonusCompleted", dataPlayer.getBonusCompleted()))
+                .execute();
+    }
+
+    /**
+     * Update the journey chest content of uuid
+     */
+    public static void updateJourneyChest(DataPlayer dataPlayer) {
+        DATASTORE.find(DataPlayer.class)
+                .filter(Filters.eq("uuid", dataPlayer.getUuid()))
+                .update(UpdateOperators.set("journeyChest", dataPlayer.getJourneyChestB64()))
                 .execute();
     }
 }
