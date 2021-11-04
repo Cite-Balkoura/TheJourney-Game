@@ -6,6 +6,7 @@ import fr.grimtown.journey.game.classes.Event;
 import fr.grimtown.journey.game.classes.Universe;
 import fr.grimtown.journey.game.managers.EventsManager;
 import fr.grimtown.journey.quests.QuestsManager;
+import fr.grimtown.journey.save.SaveManagers;
 import fr.grimtown.journey.utils.MongoDB;
 import fr.mrmicky.fastinv.FastInvManager;
 import org.bukkit.Bukkit;
@@ -41,6 +42,7 @@ public class GamePlugin extends JavaPlugin {
         mcEvent = EventsManager.getEvent(getConfigs().getString("data.event-name"));
         Bukkit.getLogger().info("Loaded event: " + mcEvent.getName());
         manager = new GameManager(this);
+        new SaveManagers(this);
         Bukkit.getScheduler().runTaskAsynchronously(this, ()-> new QuestsManager(this, manager));
     }
 

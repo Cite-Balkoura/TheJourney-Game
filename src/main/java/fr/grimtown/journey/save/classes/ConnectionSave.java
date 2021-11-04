@@ -1,24 +1,25 @@
-package fr.grimtown.journey.data.classes;
+package fr.grimtown.journey.save.classes;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import java.util.Date;
 import java.util.UUID;
 
-@Entity(value = "data")
-public class DataDeath {
+@Entity(value = "save")
+public class ConnectionSave {
     @Id
     private Object id;
     private UUID playerUuid;
     private Date date;
-    private DamageCause cause;
+    private Action action;
     private SavedInventory savedInventory;
 
-    public DataDeath() {}
+    public enum Action { JOIN, LEAVE }
 
-    public DataDeath(UUID playerUuid, Date date) {
+    public ConnectionSave() {}
+
+    public ConnectionSave(UUID playerUuid, Date date) {
         this.playerUuid = playerUuid;
         this.date = date;
         this.savedInventory = new SavedInventory();
@@ -32,12 +33,12 @@ public class DataDeath {
         return date;
     }
 
-    public DamageCause getCause() {
-        return cause;
+    public Action getAction() {
+        return action;
     }
 
-    public void setCause(DamageCause cause) {
-        this.cause = cause;
+    public void setAction(Action action) {
+        this.action = action;
     }
 
     public SavedInventory getSavedInventory() {
