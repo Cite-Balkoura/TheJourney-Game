@@ -43,7 +43,7 @@ public record GameProgress(GameManager gameManager) implements Listener {
                 Objects.requireNonNull(GamePlugin.getConfigs().getString("game.messages.quests-count"))
                         .replaceAll("<DONE>", String.valueOf(done))
                         .replaceAll("<COUNT>", String.valueOf(totalQuests)));
-        if (GameUtils.hasFinishQuests(event.getPlayer().getUniqueId())) {
+        if (GameUtils.hasFinishUniverse(event.getPlayer().getUniqueId(), GamePlugin.getUniverse())) {
             event.getPlayer().sendMessage(GamePlugin.getConfigs().getString("game.prefix") +
                     GamePlugin.getConfigs().getString("game.messages.all-completed"));
             event.getPlayer().sendMessage(Objects.requireNonNull(

@@ -17,7 +17,7 @@ game:
       lore: ["Overview:", "Overworld, Nether, End", "14 quests, 1 bonus slot"]
     stats:
       name: "Your stats"
-      lore: ["Quests done: <QUESTS>", "Bonus slots: <BONUS>", "Total done: <TOTAL>"]
+      lore: ["Quests done: <FINISHED_QUESTS>", "Bonus slots: <BONUS>", "Total done: <TOTAL>"]
     quests:
       name: "Current quests"
       lore: ["Click to see", "all the quests", "from this universe"]
@@ -31,7 +31,16 @@ game:
     title: "Journey Chest"
     base-slots: 3
     locked: "§cSlot locked"
-  base-enderchest-size: 3 #Ender chest size = this + all bonus made by player
+  switch-gui:
+    size: 27
+    title: "Universe switch"
+    lore: ["Go to the next","universe: <NEXT>"]
+    accept:
+      name: "Let's go"
+      lore: ["You will lost", "your inventory", "only journey chest", "will follow you"]
+    deny:
+      name: "I'm not ready"
+      lore: ["I prefer stay", "here to organize", "my journey chest"]
 #
 
 data:

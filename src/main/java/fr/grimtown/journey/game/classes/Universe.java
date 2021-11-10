@@ -12,4 +12,19 @@ public enum Universe {
     public int getLevel() {
         return level;
     }
+
+    public Universe getNext() {
+        switch (level) {
+            case 1 -> {
+                return MOON;
+            }
+            case 2 -> {
+                return MATRIX;
+            }
+            case 3 -> {
+                return APOCALYPSE;
+            }
+        }
+        return SKY_LAND;
+    }
 }

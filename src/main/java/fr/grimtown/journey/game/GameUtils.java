@@ -5,6 +5,7 @@ import fr.grimtown.journey.game.classes.Progression;
 import fr.grimtown.journey.game.classes.Universe;
 import fr.grimtown.journey.game.managers.ProgressionManager;
 import fr.grimtown.journey.quests.classes.Quest;
+import fr.grimtown.journey.quests.managers.QuestManager;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -60,11 +61,35 @@ public class GameUtils {
     }
 
     /**
+     * Get all completed quests for this uuid
+     */
+    public static int getPlayerQuests(UUID uuid) {
+        return getProgressions(uuid).stream().filter(Progression::isCompleted)
+                .filter(progression -> progression.getQuest().notBonus()).toList().size();
+    }
+
+    /**
+     * Get all completed bonus for this uuid
+     */
+    public static int getPlayerBonus(UUID uuid) {
+        return getProgressions(uuid).stream().filter(Progression::isCompleted)
+                .filter(progression -> progression.getQuest().isBonus()).toList().size();
+    }
+
+    /**
+     * Get all completed quests and bonus for this uuid
+     */
+    public static int getPlayerFinished(UUID uuid) {
+        return getProgressions(uuid).stream().filter(Progression::isCompleted).toList().size();
+    }
+
+    /**
      * Check if uuid has done all quests
      */
-    public static boolean hasFinishQuests(UUID uuid) {
+    public static boolean hasFinishUniverse(UUID uuid, Universe universe) {
         return getProgressions(uuid).stream().filter(Progression::isCompleted)
-                .filter(progression -> progression.getQuest().notBonus()).toList().size() ==
-                GamePlugin.getManager().getLoadedQuests().stream().filter(Quest::notBonus).toList().size();
+                .filter(progression -> progression.getQuest().notBonus())
+                .filter(progression -> progression.getQuest().getUniverse().equals(universe)).toList().size()
+                == QuestManager.getQuests(universe).stream().filter(Quest::notBonus).toList().size();
     }
 }

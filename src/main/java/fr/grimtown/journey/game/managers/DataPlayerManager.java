@@ -48,4 +48,14 @@ public class DataPlayerManager {
                 .update(UpdateOperators.set("journeyChest", dataPlayer.getJourneyChestB64()))
                 .execute();
     }
+
+    /**
+     * Update universe of uuid
+     */
+    public static void nextUniverse(UUID uuid) {
+        DATASTORE.find(DataPlayer.class)
+                .filter(Filters.eq("uuid", uuid))
+                .update(UpdateOperators.set("universe", GamePlugin.getUniverse().getNext()))
+                .execute();
+    }
 }
