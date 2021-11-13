@@ -12,8 +12,6 @@ import fr.grimtown.journey.game.classes.DataPlayer;
 import fr.grimtown.journey.game.classes.Event;
 import fr.grimtown.journey.game.classes.Progression;
 import fr.grimtown.journey.quests.classes.Quest;
-import fr.grimtown.journey.save.classes.ConnectionSave;
-import fr.grimtown.journey.save.classes.DeathSave;
 import org.bson.UuidRepresentation;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
@@ -52,7 +50,7 @@ public class MongoDB {
                 .enablePolymorphicQueries(true)
                 .build());
         if (dbName.equalsIgnoreCase("master")) datastore.getMapper().map(Event.class);
-        else datastore.getMapper().map(Progression.class, Quest.class, DataPlayer.class, ConnectionSave.class, DeathSave.class);
+        else datastore.getMapper().map(Progression.class, Quest.class, DataPlayer.class);
         datastore.ensureIndexes();
         datastore.ensureCaps();
         datastore.enableDocumentValidation();
