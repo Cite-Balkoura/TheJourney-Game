@@ -48,10 +48,20 @@ public class Growth implements Listener {
     }
 
     @EventHandler (ignoreCancelled = true)
-    public void onBoneMeal(BlockFertilizeEvent event) {
-        if (material!=null && event.getBlocks().stream().noneMatch(blockState -> blockState.getType().equals(material))) return;
-        if (!materials.isEmpty() && event.getBlocks().stream().noneMatch(blockState -> materials.contains(blockState.getType()))) return;
-        if (event.getPlayer()==null) return;
+    public void onBoneMealMultiple(BlockFertilizeEvent event) {
+        if (material != null && event.getBlocks().stream().noneMatch(blockState -> blockState.getType().equals(material)))
+            return;
+        if (!materials.isEmpty() && event.getBlocks().stream().noneMatch(blockState -> materials.contains(blockState.getType())))
+            return;
+        if (event.getPlayer() == null) return;
+        if (GameUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
+        GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
+    }
+
+    @EventHandler (ignoreCancelled = true)
+    public void onBoneMealOne(BlockFertilizeEvent event) {
+        if (material != null && event.getBlock().getType().equals(material)) return;
+        if (event.getPlayer() == null) return;
         if (GameUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
         GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
     }

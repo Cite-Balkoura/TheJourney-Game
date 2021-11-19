@@ -56,8 +56,8 @@ public class Shoot implements Listener {
     public void onPlayerShoot(EntityDeathEvent event) {
         if (event.getEntity().getLastDamageCause()==null) return;
         if (!event.getEntity().getLastDamageCause().getCause().equals(EntityDamageEvent.DamageCause.PROJECTILE)) return;
-        if (entity!=null &&  !event.getEntity().getType().equals(entity)) return;
-        if (entity==null && !entities.contains(event.getEntity().getType())) return;
+        if (entity!=null && !event.getEntity().getType().equals(entity)) return;
+        if (entity==null && !entities.isEmpty() && !entities.contains(event.getEntity().getType())) return;
         if (event.getEntity().getKiller()==null) return;
         if (GameUtils.hasCompleted(event.getEntity().getKiller().getUniqueId(), quest)) return;
         GameUtils.getProgression(event.getEntity().getKiller().getUniqueId(), quest).addProgress();

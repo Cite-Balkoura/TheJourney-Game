@@ -84,7 +84,7 @@ public class Inventory implements Listener {
         Progression progression = GameUtils.getProgression(player.getUniqueId(), quest);
         if (quest.getCount() > 0) {
             if (material!=null && player.getInventory().contains(material)) {
-                HashMap<Integer, ItemStack> removed = player.getInventory().removeItem(new ItemStack(material, quest.getCount()));
+                HashMap<Integer, ItemStack> removed = player.getInventory().removeItem(new ItemStack(material, quest.getCount() - progression.getProgress()));
                 if (removed.isEmpty()) progression.setCompleted();
                 else IntStream.range(0, quest.getCount() - progression.getProgress() - removed.get(0).getAmount())
                             .forEach(ignored -> progression.addProgress());

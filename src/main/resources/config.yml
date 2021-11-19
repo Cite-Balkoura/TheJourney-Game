@@ -1,6 +1,10 @@
 game:
   prefix: "[TheJourney]"
   universe: "SKY_LAND"
+  kit:
+    -
+      item: stone
+      count: 1
   messages:
     complete-quest: "You finish quest <QUEST_NAME>."
     complete-bonus: "You finish the bonus quest <QUEST_NAME>."

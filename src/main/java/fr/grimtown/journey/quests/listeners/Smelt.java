@@ -61,6 +61,7 @@ public class Smelt implements Listener {
         if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
         if (!event.getAction().equals(InventoryAction.PICKUP_ALL) && !event.getAction().equals(InventoryAction.PICKUP_HALF)) {
             event.setCancelled(true);
+            event.getWhoClicked().sendMessage("§cNo shift click please.");
             return;
         }
         Progression progression = GameUtils.getProgression(player.getUniqueId(), quest);

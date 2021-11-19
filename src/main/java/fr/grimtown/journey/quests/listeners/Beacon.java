@@ -34,7 +34,7 @@ public class Beacon implements Listener {
     }
 
     @EventHandler (ignoreCancelled = true)
-    public void onPlayerGetPotion(EntityPotionEffectEvent event) {
+    public void onPlayerEffect(EntityPotionEffectEvent event) {
         if (event.getNewEffect()==null) return;
         if (!(event.getEntity() instanceof Player player)) return;
         if (cause==null && !(event.getCause().equals(EntityPotionEffectEvent.Cause.BEACON) ||

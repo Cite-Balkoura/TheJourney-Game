@@ -43,6 +43,7 @@ public class Craft implements Listener {
         if (!event.getAction().equals(InventoryAction.PICKUP_ALL) && !event.getAction().equals(InventoryAction.PICKUP_HALF)) {
             event.setResult(Event.Result.DENY);
             event.setCancelled(true);
+            event.getWhoClicked().sendMessage("§cNo shift click please.");
             return;
         }
         Progression progression = GameUtils.getProgression(player.getUniqueId(), quest);

@@ -7,6 +7,7 @@ import fr.grimtown.journey.game.commands.OpenQuestGui;
 import fr.grimtown.journey.game.listeners.*;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +29,15 @@ public class GameManager {
         plugin.getCommand("journey").setExecutor(new OpenMainGui());
         plugin.getCommand("quest").setExecutor(new OpenQuestGui());
         plugin.getCommand("chest").setExecutor(new OpenJourneyChest());
+        gameRules();
+    }
+
+    private void gameRules() {
+        Bukkit.getWorlds().forEach(world -> {
+            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+            world.setGameRule(GameRule.KEEP_INVENTORY, true);
+            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+        });
     }
 
     public ArrayList<Quest> getLoadedQuests() {

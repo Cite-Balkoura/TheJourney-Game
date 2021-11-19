@@ -2,6 +2,7 @@ package fr.grimtown.journey.game.utils;
 
 import fr.grimtown.journey.GamePlugin;
 import fr.grimtown.journey.game.GameUtils;
+import fr.grimtown.journey.quests.classes.Quest;
 import fr.mrmicky.fastinv.FastInv;
 import fr.mrmicky.fastinv.ItemBuilder;
 import org.bukkit.Bukkit;
@@ -18,10 +19,21 @@ public class MainGui extends FastInv {
         setItems(0, getInventory().getSize()-1, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).name(" ").build());
         setItem(11, new ItemBuilder(Material.SPYGLASS)
                 .name(GamePlugin.getConfigs().getString("game.main-gui.info.name"))
-                .lore(GamePlugin.getConfigs().getStringList("game.main-gui.info.lore"))
+                .lore(GamePlugin.getConfigs().getStringList("game.main-gui.info.lore").stream()
+                        .map(lore -> lore
+                                .replaceAll("<QUESTS>", String.valueOf(GamePlugin.getManager().getLoadedQuests()
+                                        .stream().filter(Quest::notBonus).count()))
+                                .replaceAll("<BONUS>", String.valueOf(GamePlugin.getManager().getLoadedQuests()
+                                        .stream().filter(Quest::isBonus).count())))
+                        .collect(Collectors.toList()))
                 .build());
         setItem(13, new ItemBuilder(Material.ENDER_CHEST)
-                .name(GamePlugin.getConfigs().getString("game.journey-chest.title"))
+                .name(GamePlugin.getConfigs().getString("game.main-gui.journey-chest.name"))
+                .lore(GamePlugin.getConfigs().getStringList("game.main-gui.journey-chest.lore").stream()
+                        .map(lore -> lore
+                                .replaceAll("<SLOTS>", String.valueOf(GameUtils.getPlayerBonus(player.getUniqueId())
+                                        + GamePlugin.getConfigs().getInt("game.journey-chest.base-slots"))))
+                        .collect(Collectors.toList()))
                 .build(), event -> new JourneyChest(player.getUniqueId()).open(player));
         setItem(15, new ItemBuilder(Material.WRITABLE_BOOK)
                 .name(GamePlugin.getConfigs().getString("game.main-gui.quests.name"))

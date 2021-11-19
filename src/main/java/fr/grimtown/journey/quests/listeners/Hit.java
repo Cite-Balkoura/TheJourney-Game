@@ -54,8 +54,8 @@ public class Hit implements Listener {
 
     @EventHandler (ignoreCancelled = true)
     public void onMonsterDamage(EntityDamageByEntityEvent event) {
-        if (entity!=null &&  !event.getEntity().getType().equals(entity)) return;
-        if (entity==null && !entities.contains(event.getEntity().getType())) return;
+        if (entity!=null && !event.getEntity().getType().equals(entity)) return;
+        if (entity==null && !entities.isEmpty() && !entities.contains(event.getEntity().getType())) return;
         if (!(event.getDamager() instanceof Player player)) return;
         if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
         GameUtils.getProgression(player.getUniqueId(), quest).addProgress();

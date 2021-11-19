@@ -11,6 +11,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityBreedEvent;
 
+import java.util.Locale;
+
 public class Breed implements Listener {
     private final Quest quest;
     private EntityType entity;
@@ -18,20 +20,24 @@ public class Breed implements Listener {
     public Breed(Quest quest) {
         this.quest = quest;
         quest.setListeners(this);
-        try {
-            entity = EntityType.valueOf(quest.getPayload());
+        if (quest.getPayload().equalsIgnoreCase("ANY")) {
             QuestsUtils.questLoadLog(quest.getName(), quest.getPayload());
-        } catch (IllegalArgumentException exception) {
-            Bukkit.getLogger().warning("Can't load: " + quest.getName());
-            exception.printStackTrace();
-            HandlerList.unregisterAll(this);
+        } else {
+            try {
+                entity = EntityType.valueOf(quest.getPayload().toUpperCase(Locale.ROOT));
+                QuestsUtils.questLoadLog(quest.getName(), quest.getPayload());
+            } catch (IllegalArgumentException exception) {
+                Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                exception.printStackTrace();
+                HandlerList.unregisterAll(this);
+            }
         }
     }
 
     @EventHandler (ignoreCancelled = true)
     public void onPlayerBreed(EntityBreedEvent event) {
         if (!(event.getBreeder() instanceof Player player)) return;
-        if (!(event.getFather().getType().equals(entity) && event.getMother().getType().equals(entity))) return;
+        if (entity!=null && !(event.getFather().getType().equals(entity) && event.getMother().getType().equals(entity))) return;
         if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
         GameUtils.getProgression(player.getUniqueId(), quest).addProgress();
     }

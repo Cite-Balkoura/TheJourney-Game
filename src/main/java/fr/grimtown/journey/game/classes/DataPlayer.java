@@ -41,7 +41,7 @@ public class DataPlayer {
      */
     public Universe getNextUniverse() {
         return Arrays.stream(Universe.values()).filter(universe-> universe.getLevel()==this.universe.getLevel() + 1)
-                .findFirst().orElse(Universe.APOCALYPSE);
+                .findFirst().orElse(Universe.SKY_LAND);
     }
 
     public int getTotalCompleted() {

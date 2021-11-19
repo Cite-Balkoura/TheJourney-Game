@@ -2,12 +2,12 @@ package fr.grimtown.journey.game.classes;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.mapping.experimental.MorphiaReference;
 import fr.grimtown.journey.GamePlugin;
 import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.game.events.PlayerQuestComplete;
 import fr.grimtown.journey.game.managers.ProgressionManager;
 import fr.grimtown.journey.quests.classes.Quest;
+import fr.grimtown.journey.quests.managers.QuestManager;
 import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
 
@@ -19,7 +19,7 @@ public class Progression {
     @Id
     private ObjectId id;
     private UUID uuid;
-    private MorphiaReference<Quest> quest;
+    private ObjectId quest;
     private int progress;
     private Date completed;
 
@@ -27,7 +27,7 @@ public class Progression {
 
     public Progression(UUID uuid, Quest quest) {
         this.uuid = uuid;
-        this.quest = MorphiaReference.wrap(quest);
+        this.quest = quest.getId();
         progress = 0;
         GameUtils.getProgressions(uuid).add(this);
     }
@@ -37,7 +37,7 @@ public class Progression {
     }
 
     public Quest getQuest() {
-        return quest.get();
+        return QuestManager.getQuest(quest);
     }
 
     public int getProgress() {

@@ -2,6 +2,7 @@ package fr.grimtown.journey.game.utils;
 
 import fr.grimtown.journey.GamePlugin;
 import fr.grimtown.journey.game.classes.DataPlayer;
+import fr.grimtown.journey.game.listeners.PlayerSpawn;
 import fr.grimtown.journey.game.managers.DataPlayerManager;
 import fr.mrmicky.fastinv.FastInv;
 import fr.mrmicky.fastinv.ItemBuilder;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,6 +42,13 @@ public class JourneyChest extends FastInv {
     @Override
     public void onClick(InventoryClickEvent event) {
         event.setCancelled(false);
+        ItemStack item = event.getCurrentItem();
+        if (item!=null) {
+            if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+                List<String> lore = item.getItemMeta().getLore();
+                if (lore != null && lore.stream().anyMatch(line -> line.contains(PlayerSpawn.lore))) event.setCancelled(true);
+            }
+        }
         Bukkit.getScheduler().runTaskLaterAsynchronously(GamePlugin.getPlugin(), ()-> saveInv(event.getInventory()), 1);
     }
 

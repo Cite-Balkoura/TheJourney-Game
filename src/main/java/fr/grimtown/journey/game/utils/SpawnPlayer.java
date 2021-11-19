@@ -1,6 +1,7 @@
 package fr.grimtown.journey.game.utils;
 
 import fr.grimtown.journey.GamePlugin;
+import fr.grimtown.journey.game.listeners.PlayerSpawn;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,6 +17,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 public class SpawnPlayer implements Listener {
@@ -30,18 +33,26 @@ public class SpawnPlayer implements Listener {
         scheduler.runTaskLaterAsynchronously(GamePlugin.getPlugin(), ()-> scheduler.runTask(GamePlugin.getPlugin(), ()-> {
             if (player.isDead()) player.spigot().respawn();
             World world = Bukkit.getWorld("world");
-            double max = 100;
-            if (world!=null) max = world.getWorldBorder().getSize() * 0.45;
-            Location location = new Location(world,
-                    (Math.random()>=0.5 ? max/2 + Math.random() * (max - max/2) : (-max/2) + Math.random() * (-max - (-max/2))),
-                    200,
-                    (Math.random()>=0.5 ? max/2 + Math.random() * (max - max/2) : (-max/2) + Math.random() * (-max - (-max/2))),
-                    yaw,
-                    pitch);
+            double max = 100, min = 25;
+            if (world!=null) {
+                max = world.getWorldBorder().getSize() * 0.45;
+                min = world.getWorldBorder().getSize() * 0.125;
+            }
+            Location location = new Location(world,0, 200, 0, yaw, pitch);
+            while (!(Math.abs(location.getX()) > min) && !(Math.abs(location.getZ()) > min)) {
+                location.setX((Math.random() >= 0.5 ? 1 : -1) * ThreadLocalRandom.current().nextDouble(0, max));
+                location.setZ((Math.random() >= 0.5 ? 1 : -1) * ThreadLocalRandom.current().nextDouble(0, max));
+            }
             player.teleport(location);
             if (!keepInventory) {
                 if (Math.random()<=0.1) inventory.setItemInOffHand(new ItemStack(Material.AIR));
                 IntStream.range(0, inventory.getSize()).forEach(loop -> {
+                    ItemStack item = inventory.getItem(loop);
+                    if (item==null) return;
+                    if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+                        List<String> lore = item.getItemMeta().getLore();
+                        if (lore != null && lore.stream().anyMatch(line -> line.contains(PlayerSpawn.lore))) return;
+                    }
                     if (Math.random()<=0.1) inventory.setItem(loop, new ItemStack(Material.AIR));
                 });
             }
