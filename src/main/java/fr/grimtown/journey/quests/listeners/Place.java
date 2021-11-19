@@ -5,20 +5,20 @@ import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Place implements Listener {
     private final Quest quest;
     private Material material;
     private final ArrayList<Material> materials = new ArrayList<>();
+    private final HashMap<Player, LinkedList<Material>> mined = new HashMap<>();
 
     public Place(Quest quest) {
         this.quest = quest;
@@ -55,8 +55,26 @@ public class Place implements Listener {
 
     @EventHandler (ignoreCancelled = true)
     public void onPlayerBlockPlace(BlockPlaceEvent event) {
+        if (!materials.isEmpty()) {
+            LinkedList<Material> mined = new LinkedList<>();
+            if (this.mined.containsKey(event.getPlayer())) mined.addAll(this.mined.get(event.getPlayer()));
+            mined.add(event.getBlock().getType());
+            this.mined.put(event.getPlayer(), mined);
+        }
         if (material!=null && !event.getBlock().getType().equals(material)) return;
         if (GameUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
-        GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
+        if (quest.getCount() > 0) {
+            if (material!=null && event.getBlock().getType().equals(material)) {
+                GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
+            }
+        } else if (quest.getCount() < 0) {
+            if (materials.contains(event.getBlock().getType())) {
+                GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
+            }
+        } else if (quest.getCount()==0) {
+            if (materials.containsAll(this.mined.get(event.getPlayer()))) {
+                GameUtils.getProgression(event.getPlayer().getUniqueId(), quest);
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 game:
   prefix: "[TheJourney]"
   universe: "SKY_LAND"
+  void-height: 0
   kit:
     -
       item: stone

@@ -10,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -68,23 +67,14 @@ public class Break implements Listener {
             if (material!=null && event.getBlock().getType().equals(material)) {
                 GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
             }
-        } /*else if (quest.getCount() < 0 && quest.getCount()*-1 < materials.size()) {
-            int done = (int) materials.stream().filter(material -> this.mined.get(event.getPlayer())).count();
-            if (have >= quest.getCount()*-1) {
-                GameUtils.getProgression(event.getPlayer().getUniqueId(), quest);
-                materials.forEach(material -> player.getInventory().removeItem(new ItemStack(material, 1)));
+        } else if (quest.getCount() < 0) {
+            if (materials.contains(event.getBlock().getType())) {
+                GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
             }
-        }*/ else if (quest.getCount()==0) {
+        } else if (quest.getCount()==0) {
             if (materials.containsAll(this.mined.get(event.getPlayer()))) {
                 GameUtils.getProgression(event.getPlayer().getUniqueId(), quest);
             }
-        }/* else if (quest.getCount()*-1 >= materials.size()) {
-            if (materials.stream().allMatch(material -> player.getInventory().contains(material, quest.getCount()*-1))) {
-                GameUtils.getProgression(event.getPlayer().getUniqueId(), quest);
-                materials.forEach(material -> player.getInventory().removeItem(new ItemStack(material, quest.getCount()*-1)));
-            }
         }
-
-        GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();*/
     }
 }

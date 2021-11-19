@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,6 +83,7 @@ public class Quest {
     }
 
     public ArrayList<Material> getItem() {
+        if (item==null) return new ArrayList<>(Collections.singleton(Material.PAPER));
         if (item.contains(",")) {
             return Arrays.stream(item.split(",")).map(Material::valueOf).collect(Collectors.toCollection(ArrayList::new));
         } else {

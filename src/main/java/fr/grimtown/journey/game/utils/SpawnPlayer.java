@@ -74,7 +74,7 @@ public class SpawnPlayer implements Listener {
     @EventHandler
     public void onPlayerSpawnVoid(PlayerMoveEvent event) {
         if (!event.getPlayer().getUniqueId().equals(player.getUniqueId())) return;
-        if (event.getTo().getBlockY() >= 0) return;
+        if (event.getTo().getBlockY() >= GamePlugin.getConfigs().getInt("game.void-height")) return;
         player.teleport(event.getPlayer().getLocation().clone().add(0,10,0));
         HandlerList.unregisterAll(this);
         Bukkit.getPluginManager().registerEvents(new SpawnPlayer(event.getPlayer(), true), GamePlugin.getPlugin());

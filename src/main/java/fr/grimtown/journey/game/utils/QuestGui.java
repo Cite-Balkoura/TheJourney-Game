@@ -10,6 +10,9 @@ import fr.mrmicky.fastinv.FastInv;
 import fr.mrmicky.fastinv.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class QuestGui extends FastInv {
     private final GameManager manager = GamePlugin.getManager();
+    private final ArrayList<BukkitTask> animations = new ArrayList<>();
 
     public QuestGui(UUID questsPlayer, Universe universe) {
         super(GamePlugin.getConfigs().getInt("game.quests-gui.size"),
@@ -50,21 +54,31 @@ public class QuestGui extends FastInv {
                 materials.add(Material.ENDER_CHEST);
                 lore.add("§6Bonus");
             }
-            if (GameUtils.hasCompleted(questsPlayer, quest, universe)) item.type(Material.BOOK);
-            else if (quest.getCount()<=64) item.amount(quest.getCount());
-            else if (quest.getCount()!=0) lore.add("§b" + GameUtils.getProgression(questsPlayer, quest).getProgress()
-                    + "§6/§2" + Math.abs(quest.getCount()));
-            if (materials.size()==1) {
+            int progress = GameUtils.getProgression(questsPlayer, quest).getProgress();
+            if (GameUtils.hasCompleted(questsPlayer, quest, universe)) {
+                item.type(Material.BOOK);
+                materials.clear();
+            } else {
+                if (quest.getCount()<=64 && quest.getCount()>0 && quest.getCount()-progress>0) item.amount(quest.getCount() - progress);
+                if (quest.getCount()>0) lore.add("§b" + progress + "§6/§2" + Math.abs(quest.getCount()));
+            }
+            item.flags(ItemFlag.HIDE_ATTRIBUTES);
+            if (materials.size()<=1) {
                 setItem(quest.getSlot(), item.lore(lore).build());
             } else {
                 AtomicInteger lastDisplayed = new AtomicInteger();
-                Bukkit.getScheduler().runTaskTimerAsynchronously(GamePlugin.getPlugin(), ()-> {
+                animations.add(Bukkit.getScheduler().runTaskTimerAsynchronously(GamePlugin.getPlugin(), ()-> {
                     lastDisplayed.getAndIncrement();
-                    if (lastDisplayed.get()>materials.size()-1) lastDisplayed.set(0);
+                    if (lastDisplayed.get()> materials.size()-1) lastDisplayed.set(0);
                     item.type(materials.get(lastDisplayed.get()));
                     setItem(quest.getSlot(), item.lore(lore).build());
-                }, 0L, 20L);
+                }, 0L, 20L));
             }
         });
+    }
+
+    @Override
+    public void onClose(InventoryCloseEvent event) {
+        animations.forEach(BukkitTask::cancel);
     }
 }
