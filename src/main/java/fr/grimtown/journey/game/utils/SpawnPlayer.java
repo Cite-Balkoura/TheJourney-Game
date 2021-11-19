@@ -50,6 +50,7 @@ public class SpawnPlayer implements Listener {
                     ItemStack item = inventory.getItem(loop);
                     if (item==null) return;
                     if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+                        @SuppressWarnings("deprecation")
                         List<String> lore = item.getItemMeta().getLore();
                         if (lore != null && lore.stream().anyMatch(line -> line.contains(PlayerSpawn.lore))) return;
                     }

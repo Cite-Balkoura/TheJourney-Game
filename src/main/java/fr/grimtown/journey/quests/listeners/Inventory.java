@@ -103,7 +103,7 @@ public class Inventory implements Listener {
                 progression.setCompleted();
                 materials.forEach(material -> player.getInventory().removeItem(new ItemStack(material, 1)));
             }
-        } else if (quest.getCount()==0) {
+        } else if (quest.getCount()==0) {   //  Exclusive
             if (materials.stream().allMatch(material -> player.getInventory().contains(material, 1))) {
                 progression.setCompleted();
                 materials.forEach(material -> player.getInventory().removeItem(new ItemStack(material, 1)));

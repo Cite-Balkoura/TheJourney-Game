@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.List;
@@ -32,6 +33,8 @@ public class PlayerSpawn implements Listener {
                             new ItemBuilder(Material.valueOf(((String) item.get("item")).toUpperCase(Locale.ROOT)))
                                     .amount((int) item.get("count"))
                                     .lore(lore)
+                                    .meta(itemMeta -> itemMeta.setUnbreakable(true))
+                                    .flags(ItemFlag.HIDE_UNBREAKABLE)
                                     .build()));
             });
         }

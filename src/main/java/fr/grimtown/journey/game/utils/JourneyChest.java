@@ -45,6 +45,7 @@ public class JourneyChest extends FastInv {
         ItemStack item = event.getCurrentItem();
         if (item!=null) {
             if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+                @SuppressWarnings("deprecation")
                 List<String> lore = item.getItemMeta().getLore();
                 if (lore != null && lore.stream().anyMatch(line -> line.contains(PlayerSpawn.lore))) event.setCancelled(true);
             }

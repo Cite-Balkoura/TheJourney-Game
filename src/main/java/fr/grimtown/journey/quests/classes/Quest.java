@@ -3,7 +3,13 @@ package fr.grimtown.journey.quests.classes;
 import dev.morphia.annotations.*;
 import fr.grimtown.journey.game.classes.Universe;
 import org.bson.types.ObjectId;
+import org.bukkit.Material;
 import org.bukkit.event.Listener;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity(value = "quest")
 public class Quest {
@@ -14,6 +20,7 @@ public class Quest {
     private String name;
     private String lore;
     private int slot;
+    private String item;
     private Type type;
     private int count;
     private String payload;
@@ -72,6 +79,14 @@ public class Quest {
 
     public int getSlot() {
         return slot;
+    }
+
+    public ArrayList<Material> getItem() {
+        if (item.contains(",")) {
+            return Arrays.stream(item.split(",")).map(Material::valueOf).collect(Collectors.toCollection(ArrayList::new));
+        } else {
+            return new ArrayList<>(List.of(Material.valueOf(item)));
+        }
     }
 
     public Type getType() {

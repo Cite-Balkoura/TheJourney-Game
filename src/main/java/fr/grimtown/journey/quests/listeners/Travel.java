@@ -2,7 +2,6 @@ package fr.grimtown.journey.quests.listeners;
 
 import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.game.classes.Progression;
-import fr.grimtown.journey.game.managers.ProgressionManager;
 import fr.grimtown.journey.quests.QuestsUtils;
 import fr.grimtown.journey.quests.classes.Quest;
 import org.bukkit.Location;
@@ -34,8 +33,7 @@ public class Travel implements Listener {
         if (!quest.getPayload().equalsIgnoreCase("PEARL")) return;
         if (GameUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
         if (quest.getCount() > (int) Math.round(event.getFrom().distance(event.getTo()))) return;
-        Progression progression = GameUtils.getProgression(event.getPlayer().getUniqueId(), quest);
-        ProgressionManager.save(progression);
+        GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).setCompleted();
     }
 
     @EventHandler (ignoreCancelled = true)

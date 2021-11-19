@@ -2,7 +2,7 @@ package fr.grimtown.journey.game.classes;
 
 public enum Universe {
     SKY_LAND(1),
-    MOON(2),
+    FAR_LANDS(2),
     MATRIX(3),
     APOCALYPSE(4);
 
@@ -16,7 +16,7 @@ public enum Universe {
     public Universe getNext() {
         switch (level) {
             case 1 -> {
-                return MOON;
+                return FAR_LANDS;
             }
             case 2 -> {
                 return MATRIX;

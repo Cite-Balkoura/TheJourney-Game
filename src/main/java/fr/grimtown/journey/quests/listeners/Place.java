@@ -10,16 +10,38 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class Place implements Listener {
     private final Quest quest;
     private Material material;
+    private final ArrayList<Material> materials = new ArrayList<>();
+
     public Place(Quest quest) {
         this.quest = quest;
         quest.setListeners(this);
         if (quest.getPayload().equalsIgnoreCase("ANY")) {
             QuestsUtils.questLoadLog(quest.getName(), "ANY");
+        } else if (quest.getPayload().contains(",")) {
+            Arrays.stream(quest.getPayload().split(",")).toList()
+                    .forEach(materialType -> {
+                        Material material = Material.getMaterial(materialType.toUpperCase(Locale.ROOT));
+                        if (material!=null) materials.add(material);
+                        else {
+                            Bukkit.getLogger().warning("Can't load: " + quest.getName());
+                            HandlerList.unregisterAll(this);
+                        }
+                    });
+            if (quest.getCount() > 0) QuestsUtils.questLoadLog(quest.getName(), "Whitelist=" +
+                    materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
+            else if (quest.getCount() < 0 && quest.getCount()*-1 < materials.size())
+                QuestsUtils.questLoadLog(quest.getName(), "OneFrom=" +
+                        materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
+            else QuestsUtils.questLoadLog(quest.getName(), "Exclusive=" +
+                        materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
         } else {
             material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
             if (material != null) QuestsUtils.questLoadLog(quest.getName(), material.toString());
@@ -28,6 +50,7 @@ public class Place implements Listener {
                 HandlerList.unregisterAll(this);
             }
         }
+
     }
 
     @EventHandler (ignoreCancelled = true)
