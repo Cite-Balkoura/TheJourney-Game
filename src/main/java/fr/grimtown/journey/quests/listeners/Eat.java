@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public class Eat implements Listener {
     private final Quest quest;
     private Material material;
-    private final ArrayList<Material> materials = new ArrayList<>();
-    private final HashMap<Player, HashSet<Material>> eaten = new HashMap<>();
+    private final Set<Material> materials = new HashSet<>();
+    private final HashMap<Player, Set<Material>> eaten = new HashMap<>();
 
     public Eat(Quest quest) {
         this.quest = quest;
@@ -35,10 +35,14 @@ public class Eat implements Listener {
                             HandlerList.unregisterAll(this);
                         }
                     });
-            if (quest.getCount() < 0) QuestsUtils.questLoadLog(quest.getName(), "Exclusive=" +
+            if (quest.getCount() > 0) QuestsUtils.questLoadLog(quest.getName(), "Whitelist=" +
                     materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
-            else QuestsUtils.questLoadLog(quest.getName(), "Whitelist=" +
+            else if (quest.getCount() == 0) QuestsUtils.questLoadLog(quest.getName(), "Exclusive=" +
                     materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
+            else if (quest.getCount() < 0) {
+                Bukkit.getLogger().warning("Only Whitelist or Exclusive work: " + quest.getName());
+                HandlerList.unregisterAll(this);
+            }
         } else {
             material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
             if (material != null) QuestsUtils.questLoadLog(quest.getName(), material.toString());
@@ -54,17 +58,18 @@ public class Eat implements Listener {
         if (!(event.getEntity() instanceof Player player)) return;
         if (event.getItem()==null) return;
         if (GameUtils.hasCompleted(player.getUniqueId(), quest)) return;
-        if (quest.getCount()>=0) {
+        if (quest.getCount()>0) {   //  Single and Whitelist
             if (material!=null && !event.getItem().getType().equals(material)) return;
             if (material==null && !materials.contains(event.getItem().getType())) return;
             GameUtils.getProgression(player.getUniqueId(), quest).addProgress();
-        } else {
-            HashSet<Material> foods = eaten.getOrDefault(player, new HashSet<>());
-            if (materials.contains(event.getItem().getType())) foods.add(event.getItem().getType());
-            if (foods.size()==materials.size() || foods.size() >= quest.getCount()*-1) {// TODO: 29/10/2021 test
+        } else if (quest.getCount()==0) {   //  Exclusive
+            Set<Material> foods = eaten.getOrDefault(player, new HashSet<>());
+            foods.add(event.getItem().getType());
+            eaten.put(player, foods);
+            if (foods.containsAll(materials)) {
                 GameUtils.getProgression(player.getUniqueId(), quest).setCompleted();
                 eaten.remove(player);
-            } else eaten.put(player, foods);
+            }
         }
     }
 }

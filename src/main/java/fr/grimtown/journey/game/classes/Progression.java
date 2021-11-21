@@ -32,8 +32,8 @@ public class Progression {
         GameUtils.getProgressions(uuid).add(this);
     }
 
-    public ObjectId getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
     public Quest getQuest() {

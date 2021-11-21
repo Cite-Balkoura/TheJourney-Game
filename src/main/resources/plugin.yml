@@ -24,3 +24,8 @@ commands:
     usage: /chest
     description: "Open journey chest"
     aliases: c
+  manage:
+    usage: /manage
+    description: "Manage quests"
+    permission: "mods.quest.manage"
+    aliases: mq

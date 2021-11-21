@@ -50,7 +50,7 @@ public class Craft implements Listener {
         int loop = event.getRecipe().getResult().getAmount();
         while (loop > 0 && quest.getCount() > progression.getProgress()) {
             progression.addProgress();
-            loop++;
+            loop--;
         }
     }
 }

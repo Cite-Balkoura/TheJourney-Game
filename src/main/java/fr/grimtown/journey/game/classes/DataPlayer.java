@@ -32,6 +32,10 @@ public class DataPlayer {
         return uuid;
     }
 
+    public String getLastNameSeen() {
+        return lastNameSeen;
+    }
+
     public Universe getCurrentUniverse() {
         return universe;
     }

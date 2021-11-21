@@ -1,6 +1,7 @@
 package fr.grimtown.journey.game.utils;
 
 import fr.grimtown.journey.GamePlugin;
+import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.game.classes.DataPlayer;
 import fr.grimtown.journey.game.listeners.PlayerSpawn;
 import fr.grimtown.journey.game.managers.DataPlayerManager;
@@ -33,9 +34,10 @@ public class JourneyChest extends FastInv {
 
     @Override
     public void onOpen(InventoryOpenEvent event) {
-        setItems(0, baseSlots + dataPlayer.getBonusCompleted() - 1, null);
+        int bonus = GameUtils.getPlayerBonus(dataPlayer.getUuid());
+        setItems(0, baseSlots + bonus - 1, null);
         for (Map.Entry<Integer, ItemStack> loop : dataPlayer.getJourneyChest().entrySet()) {
-            if (loop.getKey() <= (baseSlots + dataPlayer.getBonusCompleted() - 1)) setItem(loop.getKey(), loop.getValue());
+            if (loop.getKey() <= (baseSlots + bonus - 1)) setItem(loop.getKey(), loop.getValue());
         }
     }
 

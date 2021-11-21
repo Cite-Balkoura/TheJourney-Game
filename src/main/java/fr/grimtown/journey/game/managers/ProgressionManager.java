@@ -14,6 +14,14 @@ public class ProgressionManager {
     /**
      * Get all quest progressed for this UUID of player
      */
+    public static ArrayList<Progression> getProgressions() {
+        return new ArrayList<>(DATASTORE.find(Progression.class)
+                .iterator().toList());
+    }
+
+    /**
+     * Get all quest progressed for this UUID of player
+     */
     public static ArrayList<Progression> getProgressions(UUID uuid) {
         return new ArrayList<>(DATASTORE.find(Progression.class)
                 .filter(Filters.eq("uuid", uuid))
@@ -25,5 +33,12 @@ public class ProgressionManager {
      */
     public static void save(Progression progression) {
         DATASTORE.save(progression);
+    }
+
+    /**
+     * Reset a Progression (For a player)
+     */
+    public static void reset(Progression progression) {
+        DATASTORE.delete(progression);
     }
 }

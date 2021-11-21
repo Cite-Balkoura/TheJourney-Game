@@ -3,6 +3,7 @@ package fr.grimtown.journey.game.utils;
 import fr.grimtown.journey.GamePlugin;
 import fr.grimtown.journey.game.GameManager;
 import fr.grimtown.journey.game.GameUtils;
+import fr.grimtown.journey.game.classes.Progression;
 import fr.grimtown.journey.game.classes.Universe;
 import fr.grimtown.journey.quests.classes.Quest;
 import fr.grimtown.journey.quests.managers.QuestManager;
@@ -43,36 +44,35 @@ public class QuestGui extends FastInv {
         }
         quests.forEach(quest -> {
             if (quest.getSlot() > getInventory().getSize()) return;
-            ArrayList<Material> materials = quest.getItem() != null ? quest.getItem() : new ArrayList<>(List.of(Material.PAPER));
+            ArrayList<Material> materials = quest.getItems() != null ? quest.getItems() : new ArrayList<>(List.of(Material.PAPER));
             ItemBuilder item = new ItemBuilder(materials.get(0));
             List<String> lore = new ArrayList<>(List.of(quest.getLore().split("%n")));
-            if (quest.notBonus()) {
-                item.name("§2" + quest.getName());
-            } else {
-                item.name("§9" + quest.getName());
-                item.type(Material.ENDER_CHEST);
-                materials.add(Material.ENDER_CHEST);
-                lore.add("§6Bonus");
-            }
-            int progress = GameUtils.getProgression(questsPlayer, quest).getProgress();
-            if (GameUtils.hasCompleted(questsPlayer, quest, universe)) {
-                item.type(Material.BOOK);
+            Progression progression = GameUtils.getProgression(questsPlayer, quest);
+            if (progression.isCompleted()) {
                 materials.clear();
+                item = new ItemBuilder(Material.BOOK);
             } else {
-                if (quest.getCount()<=64 && quest.getCount()>0 && quest.getCount()-progress>0) item.amount(quest.getCount() - progress);
-                if (quest.getCount()>0) lore.add("§b" + progress + "§6/§2" + Math.abs(quest.getCount()));
+                int count = Math.abs(quest.getCount());
+                if (count<=64 && count!=0 && count-progression.getProgress()>0) item.amount(count - progression.getProgress());
+                if (count!=0) lore.add("§b" + progression.getProgress() + "§6/§2" + count);
+            }
+            item.name("§2" + quest.getName());
+            if (quest.isBonus()) {
+                item.name("§9" + quest.getName());
+                lore.add("§6Bonus");
             }
             item.flags(ItemFlag.HIDE_ATTRIBUTES);
             if (materials.size()<=1) {
                 setItem(quest.getSlot(), item.lore(lore).build());
             } else {
                 AtomicInteger lastDisplayed = new AtomicInteger();
+                ItemBuilder finalItem = item;
                 animations.add(Bukkit.getScheduler().runTaskTimerAsynchronously(GamePlugin.getPlugin(), ()-> {
                     lastDisplayed.getAndIncrement();
                     if (lastDisplayed.get()> materials.size()-1) lastDisplayed.set(0);
-                    item.type(materials.get(lastDisplayed.get()));
-                    setItem(quest.getSlot(), item.lore(lore).build());
-                }, 0L, 20L));
+                    finalItem.type(materials.get(lastDisplayed.get()));
+                    setItem(quest.getSlot(), finalItem.lore(lore).build());
+                }, 0L, 40L));
             }
         });
     }

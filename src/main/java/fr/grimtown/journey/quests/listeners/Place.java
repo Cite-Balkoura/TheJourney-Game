@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public class Place implements Listener {
     private final Quest quest;
     private Material material;
-    private final ArrayList<Material> materials = new ArrayList<>();
-    private final HashMap<Player, LinkedList<Material>> mined = new HashMap<>();
+    private final Set<Material> materials = new HashSet<>();
+    private final HashMap<Player, Set<Material>> mined = new HashMap<>();
 
     public Place(Quest quest) {
         this.quest = quest;
@@ -37,14 +37,11 @@ public class Place implements Listener {
                     });
             if (quest.getCount() > 0) QuestsUtils.questLoadLog(quest.getName(), "Whitelist=" +
                     materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
-            else if (quest.getCount() < 0 && quest.getCount()*-1 < materials.size())
-                QuestsUtils.questLoadLog(quest.getName(), "OneFrom=" +
-                        materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
             else QuestsUtils.questLoadLog(quest.getName(), "Exclusive=" +
                         materials.stream().map(Enum::toString).collect(Collectors.joining(",")));
         } else {
             material = Material.getMaterial(quest.getPayload().toUpperCase(Locale.ROOT));
-            if (material != null) QuestsUtils.questLoadLog(quest.getName(), material.toString());
+            if (material != null) QuestsUtils.questLoadLog(quest.getName(), material.toString());   //  Single count
             else {
                 Bukkit.getLogger().warning("Can't load: " + quest.getName());
                 HandlerList.unregisterAll(this);
@@ -55,25 +52,22 @@ public class Place implements Listener {
 
     @EventHandler (ignoreCancelled = true)
     public void onPlayerBlockPlace(BlockPlaceEvent event) {
-        if (!materials.isEmpty()) {
-            LinkedList<Material> mined = new LinkedList<>();
-            if (this.mined.containsKey(event.getPlayer())) mined.addAll(this.mined.get(event.getPlayer()));
-            mined.add(event.getBlock().getType());
+        if (!materials.isEmpty()) { // TODO: 20/11/2021 test
+            Set<Material> mined = this.mined.getOrDefault(event.getPlayer(), new HashSet<>());
+            if (materials.contains(event.getBlock().getType())) mined.add(event.getBlock().getType());
             this.mined.put(event.getPlayer(), mined);
         }
         if (material!=null && !event.getBlock().getType().equals(material)) return;
         if (GameUtils.hasCompleted(event.getPlayer().getUniqueId(), quest)) return;
-        if (quest.getCount() > 0) {
-            if (material!=null && event.getBlock().getType().equals(material)) {
-                GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
-            }
-        } else if (quest.getCount() < 0) {
+        if (materials.isEmpty() && quest.getCount() > 0) {  //  Single count
+            GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
+        } else if (!materials.isEmpty() && quest.getCount() > 0) {   //  White list
             if (materials.contains(event.getBlock().getType())) {
                 GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).addProgress();
             }
-        } else if (quest.getCount()==0) {
-            if (materials.containsAll(this.mined.get(event.getPlayer()))) {
-                GameUtils.getProgression(event.getPlayer().getUniqueId(), quest);
+        } else if (quest.getCount()==0) {   //  Exclusive list
+            if (this.mined.get(event.getPlayer()).containsAll(materials)) {
+                GameUtils.getProgression(event.getPlayer().getUniqueId(), quest).setCompleted();
             }
         }
     }

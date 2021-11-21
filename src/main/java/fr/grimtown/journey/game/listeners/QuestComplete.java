@@ -4,7 +4,6 @@ import fr.grimtown.journey.GamePlugin;
 import fr.grimtown.journey.game.GameManager;
 import fr.grimtown.journey.game.GameUtils;
 import fr.grimtown.journey.game.classes.DataPlayer;
-import fr.grimtown.journey.game.classes.Progression;
 import fr.grimtown.journey.game.events.PlayerQuestComplete;
 import fr.grimtown.journey.game.managers.DataPlayerManager;
 import fr.grimtown.journey.game.managers.ProgressionManager;
@@ -15,7 +14,7 @@ import org.bukkit.event.Listener;
 
 import java.util.Objects;
 
-public record GameProgress(GameManager gameManager) implements Listener {
+public record QuestComplete(GameManager gameManager) implements Listener {
     /**
      * Send an announcement when a player has complete a quest ?
      */
@@ -26,8 +25,7 @@ public record GameProgress(GameManager gameManager) implements Listener {
                     Objects.requireNonNull(GamePlugin.getConfigs().getString("game.messages.complete-quest"))
                             .replaceAll("<QUEST_NAME>", event.getQuest().getName()));
             Bukkit.getLogger().info("Player: " + event.getPlayer().getName() + " has made quest " + event.getQuest().getName());
-            int doneQuests = GamePlugin.getManager().getPlayerProgression().get(event.getPlayer().getUniqueId()).stream()
-                    .filter(Progression::isCompleted).filter(progression -> progression.getQuest().notBonus()).toList().size();
+            int doneQuests = GameUtils.getPlayerQuests(event.getPlayer().getUniqueId(), GamePlugin.getUniverse());
             int totalQuests = GamePlugin.getManager().getLoadedQuests().stream().filter(Quest::notBonus).toList().size();
             event.getPlayer().sendMessage(GamePlugin.getConfigs().getString("game.prefix") +
                     Objects.requireNonNull(GamePlugin.getConfigs().getString("game.messages.quests-count"))
@@ -42,8 +40,7 @@ public record GameProgress(GameManager gameManager) implements Listener {
             dataPlayer.setBonusCompleted(Math.toIntExact(ProgressionManager.getProgressions(event.getPlayer().getUniqueId())
                     .stream().filter(progression -> progression.getQuest().isBonus()).count()));
             DataPlayerManager.updateBonus(dataPlayer);
-            int doneBonus = GamePlugin.getManager().getPlayerProgression().get(event.getPlayer().getUniqueId()).stream()
-                    .filter(Progression::isCompleted).filter(progression -> progression.getQuest().isBonus()).toList().size();
+            int doneBonus = GameUtils.getPlayerBonus(event.getPlayer().getUniqueId(), GamePlugin.getUniverse());
             int totalBonus = GamePlugin.getManager().getLoadedQuests().stream().filter(Quest::isBonus).toList().size();
             event.getPlayer().sendMessage(GamePlugin.getConfigs().getString("game.prefix") +
                     Objects.requireNonNull(GamePlugin.getConfigs().getString("game.messages.bonus-count"))

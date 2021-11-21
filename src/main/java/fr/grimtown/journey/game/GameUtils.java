@@ -13,13 +13,20 @@ import java.util.UUID;
 
 public class GameUtils {
     /**
+     * Get a quest from this universe (Need to be loaded)
+     */
+    public static Quest getQuest(String questName) {
+        return GamePlugin.getManager().getLoadedQuests().stream()
+                .filter(quest -> quest.getName().equalsIgnoreCase(questName))
+                .findFirst().orElse(null);
+    }
+
+    /**
      * Get Progressions of loaded quests for uuid, create them if no exist
      */
     public static ArrayList<Progression> getProgressions(UUID uuid) {
         if (!GamePlugin.getManager().getPlayerProgression().containsKey(uuid)) {
-            ArrayList<Progression> progression = new ArrayList<>(ProgressionManager.getProgressions(uuid).stream()
-                    .filter(loop -> GamePlugin.getManager().getLoadedQuests().stream()
-                            .anyMatch(quest -> quest.getId().equals(loop.getQuest().getId()))).toList());
+            ArrayList<Progression> progression = ProgressionManager.getProgressions(uuid);
             GamePlugin.getManager().getPlayerProgression().put(uuid, progression);
         }
         return GamePlugin.getManager().getPlayerProgression().get(uuid);
@@ -69,10 +76,28 @@ public class GameUtils {
     }
 
     /**
+     * Get all completed quests for this uuid in universe
+     */
+    public static int getPlayerQuests(UUID uuid, Universe universe) {
+        return getProgressions(uuid).stream().filter(Progression::isCompleted)
+                .filter(progression -> progression.getQuest().getUniverse().equals(universe))
+                .filter(progression -> progression.getQuest().notBonus()).toList().size();
+    }
+
+    /**
      * Get all completed bonus for this uuid
      */
     public static int getPlayerBonus(UUID uuid) {
         return getProgressions(uuid).stream().filter(Progression::isCompleted)
+                .filter(progression -> progression.getQuest().isBonus()).toList().size();
+    }
+
+    /**
+     * Get all completed bonus for this uuid in universe
+     */
+    public static int getPlayerBonus(UUID uuid, Universe universe) {
+        return getProgressions(uuid).stream().filter(Progression::isCompleted)
+                .filter(progression -> progression.getQuest().getUniverse().equals(universe))
                 .filter(progression -> progression.getQuest().isBonus()).toList().size();
     }
 
@@ -91,5 +116,14 @@ public class GameUtils {
                 .filter(progression -> progression.getQuest().notBonus())
                 .filter(progression -> progression.getQuest().getUniverse().equals(universe)).toList().size()
                 == QuestManager.getQuests(universe).stream().filter(Quest::notBonus).toList().size();
+    }
+
+    /**
+     * Reset a progression for uuid
+     */
+    public static void reset(UUID uuid, Progression progression) {
+        ArrayList<Progression> progressions = GamePlugin.getManager().getPlayerProgression().get(uuid);
+        if (progressions!=null) progressions.remove(progression);
+        ProgressionManager.reset(progression);
     }
 }

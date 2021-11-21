@@ -38,7 +38,8 @@ public class StandOn implements Listener {
         } else {
             Material material = Material.getMaterial(quest.getPayload());
             if (material!=null) {
-                blocks.set(0, material);
+                blocks.clear();
+                blocks.add(material);
                 QuestsUtils.questLoadLog(quest.getName(), material.toString());
             } else {
                 Bukkit.getLogger().warning("Can't load: " + quest.getName());
